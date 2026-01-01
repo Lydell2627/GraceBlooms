@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "~/convex/_generated/api";
 
 interface AuthContextType {
@@ -32,11 +32,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Use the Convex query to get the authenticated user from Better Auth
     const authUser = useQuery(api.auth.getCurrentUser);
 
+    // Mutation to sync user to main users table
+    const upsertUser = useMutation(api.users.upsert);
+    const [hasSynced, setHasSynced] = React.useState(false);
+
     // Fetch user role from our users table
     const convexUser = useQuery(
         api.users.getByEmail,
         authUser?.email ? { email: authUser.email } : "skip"
     );
+
+    // Auto-sync user to main users table when authenticated
+    React.useEffect(() => {
+        if (authUser && !hasSynced) {
+            upsertUser({
+                email: authUser.email,
+                name: authUser.name ?? undefined,
+                image: authUser.image ?? undefined,
+            }).then(() => {
+                setHasSynced(true);
+                console.log("✅ User synced to main users table");
+            }).catch((err) => {
+                console.error("❌ Failed to sync user:", err);
+            });
+        }
+    }, [authUser, hasSynced, upsertUser]);
+
+    // Reset sync flag when user logs out
+    React.useEffect(() => {
+        if (!authUser) {
+            setHasSynced(false);
+        }
+    }, [authUser]);
 
     // authUser === undefined means loading, null means not authenticated
     const isLoading = authUser === undefined || (authUser !== null && convexUser === undefined);
