@@ -15,18 +15,33 @@ import { cn } from "~/lib/utils";
 import { useAuth } from "~/app/_components/AuthProvider";
 
 // Extend window for Google Identity Services
+interface GoogleCredentialResponse {
+    credential: string;
+}
+
+interface GooglePromptNotification {
+    isNotDisplayed: () => boolean;
+    isSkippedMoment: () => boolean;
+}
+
 declare global {
     interface Window {
         google?: {
             accounts: {
                 id: {
-                    initialize: (config: any) => void;
-                    prompt: (callback?: (notification: any) => void) => void;
+                    initialize: (config: {
+                        client_id: string | undefined;
+                        callback: (response: GoogleCredentialResponse) => void;
+                        auto_select: boolean;
+                        cancel_on_tap_outside: boolean;
+                        ux_mode: "popup" | "redirect";
+                    }) => void;
+                    prompt: (callback?: (notification: GooglePromptNotification) => void) => void;
                     disableAutoSelect: () => void;
                 };
             };
         };
-        handleGoogleCredential?: (response: any) => void;
+        handleGoogleCredential?: (response: GoogleCredentialResponse) => void;
     }
 }
 
@@ -58,7 +73,7 @@ export default function SignUpPage() {
     const allRequirementsMet = passwordRequirements.every((r) => r.met);
     const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
 
-    const handleGoogleCredentialResponse = React.useCallback(async (response: any) => {
+    const handleGoogleCredentialResponse = React.useCallback(async (response: GoogleCredentialResponse) => {
         setGoogleLoading(true);
         setIsLoading(true);
         try {
@@ -104,7 +119,7 @@ export default function SignUpPage() {
     const handleGoogleClick = () => {
         if (window.google) {
             setGoogleLoading(true);
-            window.google.accounts.id.prompt((notification: any) => {
+            window.google.accounts.id.prompt((notification: GooglePromptNotification) => {
                 if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
                     toast.error("Google popup was blocked. Please allow popups for this site.");
                     setGoogleLoading(false);

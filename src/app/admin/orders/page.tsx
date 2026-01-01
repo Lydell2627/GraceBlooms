@@ -54,7 +54,7 @@ import { toast } from "sonner";
 
 const statuses = ["PENDING", "PROCESSING", "DELIVERED", "CANCELLED"];
 
-const statusColors: Record<string, string> = {
+const statusColors: Record<string, "secondary" | "default" | "sage" | "destructive" | "outline"> = {
     PENDING: "secondary",
     PROCESSING: "default",
     DELIVERED: "sage",
@@ -133,7 +133,7 @@ export default function AdminOrdersPage() {
                                         </p>
                                         <p className="text-2xl font-bold">{count}</p>
                                     </div>
-                                    <Badge variant={statusColors[status] as any}>{status}</Badge>
+                                    <Badge variant={statusColors[status]}>{status}</Badge>
                                 </div>
                             </CardContent>
                         </Card>
@@ -244,7 +244,7 @@ export default function AdminOrdersPage() {
                                                         {isUpdating === order._id ? (
                                                             <Loader2 className="h-3 w-3 animate-spin" />
                                                         ) : (
-                                                            <Badge variant={statusColors[order.status] as any}>
+                                                            <Badge variant={statusColors[order.status]}>
                                                                 {order.status.toLowerCase()}
                                                             </Badge>
                                                         )}
@@ -313,7 +313,7 @@ export default function AdminOrdersPage() {
                                         {selectedOrder.userEmail || "No email provided"}
                                     </p>
                                 </div>
-                                <Badge variant={statusColors[selectedOrder.status] as any}>
+                                <Badge variant={statusColors[selectedOrder.status]}>
                                     {selectedOrder.status.toLowerCase()}
                                 </Badge>
                             </div>

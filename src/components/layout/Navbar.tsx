@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import NextImage from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Flower2, ShoppingBag, Menu, User, LogOut, Sparkles } from "lucide-react";
 
@@ -246,9 +247,11 @@ export function Navbar() {
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" className="flex items-center gap-2 rounded-xl">
                                         {user.image ? (
-                                            <img
+                                            <NextImage
                                                 src={user.image}
                                                 alt={user.name || "User"}
+                                                width={28}
+                                                height={28}
                                                 className="h-7 w-7 rounded-full ring-2 ring-primary/20"
                                             />
                                         ) : (
@@ -340,9 +343,11 @@ export function Navbar() {
                                     <>
                                         <div className="flex items-center gap-3 mb-4 px-4">
                                             {user.image ? (
-                                                <img
+                                                <NextImage
                                                     src={user.image}
                                                     alt={user.name || "User"}
+                                                    width={48}
+                                                    height={48}
                                                     className="h-12 w-12 rounded-full ring-2 ring-primary/20"
                                                 />
                                             ) : (
