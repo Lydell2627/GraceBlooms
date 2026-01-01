@@ -147,7 +147,7 @@ export function Navbar() {
                                     <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                                         <li className="row-span-3">
                                             <NavigationMenuLink asChild>
-                                                <a
+                                                <Link
                                                     className="group flex h-full w-full select-none flex-col justify-end rounded-2xl bg-gradient-to-b from-primary/15 to-primary/5 p-6 no-underline outline-none transition-all duration-300 hover:from-primary/25 hover:to-primary/10 focus:shadow-md"
                                                     href="/products"
                                                 >
@@ -160,7 +160,7 @@ export function Navbar() {
                                                     <p className="text-sm leading-tight text-muted-foreground">
                                                         Hand-picked blooms at their peak freshness. Updated daily.
                                                     </p>
-                                                </a>
+                                                </Link>
                                             </NavigationMenuLink>
                                         </li>
                                         <ListItem href="/products" title="All Flowers">

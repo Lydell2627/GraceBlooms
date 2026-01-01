@@ -1,5 +1,4 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
 
@@ -7,24 +6,24 @@ const f = createUploadthing();
 export const ourFileRouter = {
     // Product images - max 4MB, only images
     productImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
-        .middleware(async ({ req }) => {
+        .middleware(async ({ req: _req }) => {
             // For now, allow any uploads
             // In production, you'd check auth here:
             // const session = await getSession();
             // if (!session?.user?.isAdmin) throw new UploadThingError("Unauthorized");
             return { uploadedBy: "admin" };
         })
-        .onUploadComplete(async ({ metadata, file }) => {
+        .onUploadComplete(async ({ metadata: _metadata, file }) => {
             console.log("Upload complete:", file.url);
             return { url: file.url };
         }),
 
     // Collection/banner images - larger size allowed
     collectionImage: f({ image: { maxFileSize: "8MB", maxFileCount: 1 } })
-        .middleware(async ({ req }) => {
+        .middleware(async ({ req: _req }) => {
             return { uploadedBy: "admin" };
         })
-        .onUploadComplete(async ({ metadata, file }) => {
+        .onUploadComplete(async ({ metadata: _metadata, file }) => {
             console.log("Collection image uploaded:", file.url);
             return { url: file.url };
         }),

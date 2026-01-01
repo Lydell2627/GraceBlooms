@@ -17,7 +17,7 @@ import { QuickViewDialog } from "~/components/product/QuickViewDialog";
 import { ScrollReveal } from "~/components/ui/scroll-reveal";
 import { FloatingShape } from "~/components/ui/floating-element";
 import { useAuth } from "~/app/_components/AuthProvider";
-import { cn } from "~/lib/utils";
+
 
 const occasions = [
     "Wedding",
@@ -437,7 +437,7 @@ export default function Home() {
                                         ))}
                                     </div>
                                     <blockquote className="mb-6 text-lg font-medium leading-relaxed">
-                                        "{testimonial.quote}"
+                                        &ldquo;{testimonial.quote}&rdquo;
                                     </blockquote>
                                     <div>
                                         <p className="font-bold">{testimonial.author}</p>
