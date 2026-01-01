@@ -25,7 +25,7 @@ export default function SignUpPage() {
     const [confirmPassword, setConfirmPassword] = React.useState("");
     const [showPassword, setShowPassword] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
-    const [gisLoaded, setGisLoaded] = React.useState(false);
+
     const [googleLoading, setGoogleLoading] = React.useState(false);
 
     // Redirect if already authenticated

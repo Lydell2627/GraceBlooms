@@ -9,7 +9,7 @@ const siteUrl = process.env.SITE_URL!;
 export const createAuth = (ctx: any) => {
     return betterAuth({
         baseURL: siteUrl,
-        database: convexAdapter(ctx, { adapter: internal.adapter }),
+        database: convexAdapter(ctx, { adapter: internal.adapter } as any),
         emailAndPassword: {
             enabled: true,
             requireEmailVerification: false,
