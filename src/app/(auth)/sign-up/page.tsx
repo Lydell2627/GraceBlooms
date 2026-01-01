@@ -3,9 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Script from "next/script";
+
 import { Flower2, Mail, Lock, User, Loader2, Eye, EyeOff, CheckCircle2 } from "lucide-react";
-import { signUp } from "~/lib/auth-client";
+import { signIn, signUp } from "~/lib/auth-client";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -14,36 +14,7 @@ import { toast } from "sonner";
 import { cn } from "~/lib/utils";
 import { useAuth } from "~/app/_components/AuthProvider";
 
-// Extend window for Google Identity Services
-interface GoogleCredentialResponse {
-    credential: string;
-}
 
-interface GooglePromptNotification {
-    isNotDisplayed: () => boolean;
-    isSkippedMoment: () => boolean;
-}
-
-declare global {
-    interface Window {
-        google?: {
-            accounts: {
-                id: {
-                    initialize: (config: {
-                        client_id: string | undefined;
-                        callback: (response: GoogleCredentialResponse) => void;
-                        auto_select: boolean;
-                        cancel_on_tap_outside: boolean;
-                        ux_mode: "popup" | "redirect";
-                    }) => void;
-                    prompt: (callback?: (notification: GooglePromptNotification) => void) => void;
-                    disableAutoSelect: () => void;
-                };
-            };
-        };
-        handleGoogleCredential?: (response: GoogleCredentialResponse) => void;
-    }
-}
 
 export default function SignUpPage() {
     const router = useRouter();
@@ -73,60 +44,16 @@ export default function SignUpPage() {
     const allRequirementsMet = passwordRequirements.every((r) => r.met);
     const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
 
-    const handleGoogleCredentialResponse = React.useCallback(async (response: GoogleCredentialResponse) => {
+    const handleGoogleClick = async () => {
         setGoogleLoading(true);
-        setIsLoading(true);
         try {
-            const res = await fetch("/api/auth/google", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ credential: response.credential }),
+            await signIn.social({
+                provider: "google",
+                callbackURL: "/",
             });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                toast.error(data.error || "Failed to sign up with Google");
-                setGoogleLoading(false);
-                setIsLoading(false);
-                return;
-            }
-
-            toast.success(data.isNew ? "Account created! Welcome!" : "Welcome back!");
-            router.push("/");
-            router.refresh();
         } catch (error) {
-            toast.error("Something went wrong with Google sign up.");
+            toast.error("Google sign-in failed.");
             setGoogleLoading(false);
-            setIsLoading(false);
-        }
-    }, [router]);
-
-    React.useEffect(() => {
-        if (gisLoaded && window.google) {
-            window.handleGoogleCredential = handleGoogleCredentialResponse;
-
-            window.google.accounts.id.initialize({
-                client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-                callback: handleGoogleCredentialResponse,
-                auto_select: false,
-                cancel_on_tap_outside: true,
-                ux_mode: "popup",
-            });
-        }
-    }, [gisLoaded, handleGoogleCredentialResponse]);
-
-    const handleGoogleClick = () => {
-        if (window.google) {
-            setGoogleLoading(true);
-            window.google.accounts.id.prompt((notification: GooglePromptNotification) => {
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    toast.error("Google popup was blocked. Please allow popups for this site.");
-                    setGoogleLoading(false);
-                }
-            });
-        } else {
-            toast.error("Google services not loaded. Please refresh the page.");
         }
     };
 
@@ -155,9 +82,20 @@ export default function SignUpPage() {
             if (result.error) {
                 toast.error(result.error.message || "Failed to create account");
             } else {
-                toast.success("Account created successfully!");
-                router.push("/");
-                router.refresh();
+                // Auto sign-in explicitly to be safe
+                const signInResult = await signIn.email({
+                    email,
+                    password,
+                });
+
+                if (signInResult.error) {
+                    toast.error("Account created, but failed to sign in automatically. Please sign in.");
+                    router.push("/sign-in");
+                } else {
+                    toast.success("Account created successfully!");
+                    // Force a full reload to ensure the new session cookie is picked up by all clients
+                    window.location.href = "/";
+                }
             }
         } catch (error) {
             toast.error("Something went wrong. Please try again.");
@@ -189,13 +127,6 @@ export default function SignUpPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-background px-4 py-8">
-            {/* Google Identity Services Script */}
-            <Script
-                src="https://accounts.google.com/gsi/client"
-                strategy="afterInteractive"
-                onLoad={() => setGisLoaded(true)}
-            />
-
             {/* Background decoration with floating elements */}
             <div className="fixed inset-0 -z-10 overflow-hidden">
                 <div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/5 blur-3xl float" />
@@ -231,7 +162,7 @@ export default function SignUpPage() {
                     <Button
                         variant="outline"
                         type="button"
-                        disabled={isLoading || googleLoading || !gisLoaded}
+                        disabled={isLoading || googleLoading}
                         onClick={handleGoogleClick}
                         className="w-full h-11 font-medium"
                     >
