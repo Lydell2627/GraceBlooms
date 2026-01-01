@@ -52,12 +52,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [authUser, convexUser, isLoading]);
 
     const value = React.useMemo(() => {
-        const user = authUser && convexUser ? {
-            id: String(authUser._id), // Convex uses _id
+        // Use authUser from Better Auth component directly
+        // convexUser is optional - only used for role lookup
+        const user = authUser ? {
+            id: String(authUser._id),
             name: authUser.name,
             email: authUser.email,
             image: authUser.image,
-            role: convexUser.role,
+            role: convexUser?.role ?? "CUSTOMER", // Default to CUSTOMER if no role found
         } : null;
 
         // Case-insensitive check
