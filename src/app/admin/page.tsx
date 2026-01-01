@@ -10,7 +10,6 @@ import {
     TrendingUp,
     ArrowUpRight,
     ArrowDownRight,
-    MoreHorizontal,
     Eye,
 } from "lucide-react";
 import { useQuery } from "convex/react";

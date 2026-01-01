@@ -10,9 +10,6 @@ import {
     Truck,
     Clock,
     ShieldCheck,
-    Info,
-    ArrowLeft,
-    Star
 } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "~/convex/_generated/api";

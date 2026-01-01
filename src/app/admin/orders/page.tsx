@@ -5,7 +5,6 @@ import {
     ShoppingCart,
     Search,
     Eye,
-    MoreHorizontal,
     ChevronDown,
     Package,
     Check,
@@ -21,9 +20,6 @@ import { Skeleton } from "~/components/ui/skeleton";
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
 } from "~/components/ui/card";
 import {
     Dialog,
@@ -36,7 +32,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import {

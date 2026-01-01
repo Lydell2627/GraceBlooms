@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Flower2, ShoppingBag, Menu, User, LogOut, Sparkles } from "lucide-react";
 
-import { useIsMobile } from "~/hooks/use-mobile";
 import { useCart } from "~/hooks/useCart";
 import { useAuth } from "~/app/_components/AuthProvider";
 import { signOut } from "~/lib/auth-client";
@@ -73,7 +72,6 @@ const collections: { title: string; href: string; description: string }[] = [
 ];
 
 export function Navbar() {
-    const isMobile = useIsMobile();
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [scrolled, setScrolled] = React.useState(false);
     const cartItems = useCart((state) => state.items);

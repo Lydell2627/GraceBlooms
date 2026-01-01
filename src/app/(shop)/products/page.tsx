@@ -38,7 +38,14 @@ export default function ProductsPage() {
     const [priceRange, setPriceRange] = useState([0, 200]);
     const [sortBy, setSortBy] = useState("featured");
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-    const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
+    const [quickViewProduct, setQuickViewProduct] = useState<{
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        image: string | null;
+        occasion: string;
+    } | null>(null);
     const prefersReducedMotion = useReducedMotion();
 
     // Use Convex query instead of tRPC

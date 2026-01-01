@@ -23,9 +23,6 @@ import { ImageUpload } from "~/components/ui/image-upload";
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
 } from "~/components/ui/card";
 import {
     Dialog,

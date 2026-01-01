@@ -23,13 +23,11 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Separator } from "~/components/ui/separator"
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
-import { Price } from "~/components/product/Price"
 import { Navbar } from "~/components/layout/Navbar"
 import { Footer } from "~/components/layout/Footer"
 import { toast } from "sonner"
 
 export default function CheckoutPage() {
-    const router = useRouter()
     const { items, total, clearCart } = useCart()
     const [isSubmitting, setIsSubmitting] = React.useState(false)
     const [success, setSuccess] = React.useState(false)

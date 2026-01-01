@@ -91,7 +91,14 @@ const testimonials = [
 export default function Home() {
     const prefersReducedMotion = useReducedMotion();
     const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-    const [quickViewProduct, setQuickViewProduct] = React.useState<any>(null);
+    const [quickViewProduct, setQuickViewProduct] = React.useState<{
+        id: string;
+        name: string;
+        description: string;
+        price: number;
+        image: string | null;
+        occasion: string;
+    } | null>(null);
 
     // Fetch dynamic products from Convex
     const products = useQuery(api.products.list, {});
