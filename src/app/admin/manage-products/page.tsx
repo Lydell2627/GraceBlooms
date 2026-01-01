@@ -88,7 +88,7 @@ export default function AdminProductsPage() {
     const [search, setSearch] = React.useState("");
     const [filterOccasion, setFilterOccasion] = React.useState<string>("ALL");
     const [isCreateOpen, setIsCreateOpen] = React.useState(false);
-    const [editingProduct, setEditingProduct] = React.useState<(typeof products)[0] | null>(null);
+    const [editingProduct, setEditingProduct] = React.useState<NonNullable<typeof products>[number] | null>(null);
     const [formData, setFormData] = React.useState<ProductFormData>(emptyForm);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -157,7 +157,7 @@ export default function AdminProductsPage() {
         }
     };
 
-    const openEdit = (product: (typeof products)[0]) => {
+    const openEdit = (product: NonNullable<typeof products>[number]) => {
         setEditingProduct(product);
         setFormData({
             name: product.name,

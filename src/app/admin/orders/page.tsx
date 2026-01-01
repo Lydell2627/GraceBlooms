@@ -72,7 +72,7 @@ export default function AdminOrdersPage() {
 
     const [search, setSearch] = React.useState("");
     const [filterStatus, setFilterStatus] = React.useState<string>("ALL");
-    const [selectedOrder, setSelectedOrder] = React.useState<(typeof orders)[0] | null>(null);
+    const [selectedOrder, setSelectedOrder] = React.useState<NonNullable<typeof orders>[number] | null>(null);
     const [isUpdating, setIsUpdating] = React.useState<string | null>(null);
 
     const isLoading = orders === undefined;
