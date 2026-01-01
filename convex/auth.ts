@@ -1,7 +1,9 @@
 import { convexAdapter } from "@convex-dev/better-auth";
+import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { internal } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
+import authConfig from "./auth.config";
 
 const siteUrl = process.env.SITE_URL!;
 
@@ -9,6 +11,16 @@ export const createAuth = (ctx: any) => {
     return betterAuth({
         baseURL: siteUrl,
         database: convexAdapter(ctx, { adapter: (internal as any).authAdapter }),
+        plugins: [convex({ authConfig })],
+        user: {
+            modelName: "users",
+        },
+        session: {
+            modelName: "sessions",
+        },
+        account: {
+            modelName: "accounts",
+        },
         emailAndPassword: {
             enabled: true,
             requireEmailVerification: false,
