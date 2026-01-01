@@ -242,7 +242,7 @@ export default function AdminUsersPage() {
                                                 ) : (
                                                     <Shield className="h-3 w-3" />
                                                 )}
-                                                {user.role.toLowerCase()}
+                                                {user.role?.toLowerCase() ?? "customer"}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-sm text-muted-foreground">
