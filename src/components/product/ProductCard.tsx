@@ -70,7 +70,7 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
             {/* Image Container */}
             <Link href={`/products/${product.id}`} className="relative aspect-[4/5] overflow-hidden bg-muted">
                 <Image
-                    src={product.image || "/product-placeholder.png"}
+                    src={product.image || "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn"}
                     alt={product.name}
                     fill
                     className={cn(

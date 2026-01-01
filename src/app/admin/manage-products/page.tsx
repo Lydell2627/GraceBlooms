@@ -19,6 +19,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Badge } from "~/components/ui/badge";
 import { Skeleton } from "~/components/ui/skeleton";
+import { ImageUpload } from "~/components/ui/image-upload";
 import {
     Card,
     CardContent,
@@ -168,78 +169,7 @@ export default function AdminProductsPage() {
         });
     };
 
-    const ProductForm = ({ isEdit = false }: { isEdit?: boolean }) => (
-        <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-                <Label htmlFor="name">Product Name</Label>
-                <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Rose Bouquet"
-                />
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="description">Description</Label>
-                <Input
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Beautiful hand-picked roses..."
-                />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                    <Label htmlFor="price">Price ($)</Label>
-                    <Input
-                        id="price"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                    />
-                </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="stock">Stock</Label>
-                    <Input
-                        id="stock"
-                        type="number"
-                        min="0"
-                        value={formData.stock}
-                        onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
-                    />
-                </div>
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="occasion">Occasion</Label>
-                <Select
-                    value={formData.occasion}
-                    onValueChange={(value) => setFormData({ ...formData, occasion: value })}
-                >
-                    <SelectTrigger>
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {occasions.map((occ) => (
-                            <SelectItem key={occ} value={occ}>
-                                {occ.charAt(0) + occ.slice(1).toLowerCase()}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="image">Image URL</Label>
-                <Input
-                    id="image"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    placeholder="https://..."
-                />
-            </div>
-        </div>
-    );
+
 
     return (
         <div className="space-y-6">
@@ -265,7 +195,77 @@ export default function AdminProductsPage() {
                                 Create a new flower arrangement for your store.
                             </DialogDescription>
                         </DialogHeader>
-                        <ProductForm />
+                        {/* Inline form - prevents focus loss from nested component re-renders */}
+                        <div className="grid gap-4 py-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="create-name">Product Name</Label>
+                                <Input
+                                    id="create-name"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    placeholder="e.g. Rose Bouquet"
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="create-description">Description</Label>
+                                <Input
+                                    id="create-description"
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    placeholder="Beautiful hand-picked roses..."
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="create-price">Price ($)</Label>
+                                    <Input
+                                        id="create-price"
+                                        type="number"
+
+                                        value={formData.price}
+                                        onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="create-stock">Stock</Label>
+                                    <Input
+                                        id="create-stock"
+                                        type="number"
+                                        min="0"
+                                        value={formData.stock}
+                                        onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="create-occasion">Occasion</Label>
+                                <Select
+                                    value={formData.occasion}
+                                    onValueChange={(value) => setFormData({ ...formData, occasion: value })}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {occasions.map((occ) => (
+                                            <SelectItem key={occ} value={occ}>
+                                                {occ.charAt(0) + occ.slice(1).toLowerCase()}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="grid gap-2">
+                                <Label>Product Image</Label>
+                                <ImageUpload
+                                    value={formData.image}
+                                    onChange={(url) => setFormData({ ...formData, image: url })}
+                                    onRemove={() => setFormData({ ...formData, image: "" })}
+                                    endpoint="productImage"
+                                    className="aspect-square w-full max-w-[200px]"
+                                />
+                            </div>
+                        </div>
                         <DialogFooter>
                             <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
                                 Cancel
@@ -353,7 +353,7 @@ export default function AdminProductsPage() {
                                         <TableCell>
                                             <div className="h-12 w-12 overflow-hidden rounded-lg bg-muted">
                                                 <Image
-                                                    src={product.image || "/product-placeholder.png"}
+                                                    src={product.image || "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn"}
                                                     alt={product.name}
                                                     width={48}
                                                     height={48}
@@ -423,7 +423,78 @@ export default function AdminProductsPage() {
                             Update product details.
                         </DialogDescription>
                     </DialogHeader>
-                    <ProductForm isEdit />
+                    {/* Inline form - prevents focus loss from nested component re-renders */}
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="edit-name">Product Name</Label>
+                            <Input
+                                id="edit-name"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                placeholder="e.g. Rose Bouquet"
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="edit-description">Description</Label>
+                            <Input
+                                id="edit-description"
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                placeholder="Beautiful hand-picked roses..."
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="edit-price">Price ($)</Label>
+                                <Input
+                                    id="edit-price"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={formData.price}
+                                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="edit-stock">Stock</Label>
+                                <Input
+                                    id="edit-stock"
+                                    type="number"
+                                    min="0"
+                                    value={formData.stock}
+                                    onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                                />
+                            </div>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="edit-occasion">Occasion</Label>
+                            <Select
+                                value={formData.occasion}
+                                onValueChange={(value) => setFormData({ ...formData, occasion: value })}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {occasions.map((occ) => (
+                                        <SelectItem key={occ} value={occ}>
+                                            {occ.charAt(0) + occ.slice(1).toLowerCase()}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Product Image</Label>
+                            <ImageUpload
+                                value={formData.image}
+                                onChange={(url) => setFormData({ ...formData, image: url })}
+                                onRemove={() => setFormData({ ...formData, image: "" })}
+                                endpoint="productImage"
+                                className="aspect-square w-full max-w-[200px]"
+                            />
+                        </div>
+                    </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setEditingProduct(null)}>
                             Cancel

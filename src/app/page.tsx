@@ -31,19 +31,19 @@ const occasions = [
 const collections = [
     {
         title: "Wedding",
-        img: "/wedding-collection.png",
+        img: "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMgz19w4ualML4DajYpfn8mBi1RTGIFctgOHro",
         count: "12 Items",
         description: "Elegant arrangements for your special day",
     },
     {
         title: "Anniversary",
-        img: "/anniversary-collection.png",
+        img: "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMP6rqR2S4CqkKBeOpjAJhMcQ0IZSFi3xlE4sU",
         count: "8 Items",
         description: "Celebrate milestones with classic beauty",
     },
     {
         title: "Sympathy",
-        img: "/sympathy-collection.png",
+        img: "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMyQeZhG7opIwWKlVO4xCf0dFXALQ7JUBujHkz",
         count: "15 Items",
         description: "Heartfelt tributes that honor memories",
     },
@@ -114,7 +114,7 @@ export default function Home() {
                     className="absolute inset-0 z-0"
                 >
                     <Image
-                        src="/hero-bg.png"
+                        src="https://2lcifuj23a.ufs.sh/f/7mwewDydS8QM5cnd4yUj4at0SrcIVxTMmfYzNpQnWXGdAHsF"
                         alt="Beautiful floral arrangement"
                         fill
                         className="object-cover"

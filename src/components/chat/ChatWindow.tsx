@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "~/lib/auth-client";
 import { useState, useEffect, useRef } from "react";
 import { Send, Loader2, User } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";

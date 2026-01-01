@@ -120,7 +120,7 @@ export function CartSheet({ children }: CartSheetProps) {
                                             >
                                                 <div className="relative h-20 w-20 overflow-hidden rounded-xl bg-muted">
                                                     <Image
-                                                        src="/product-placeholder.png"
+                                                        src="https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn"
                                                         alt={item.name}
                                                         fill
                                                         className="object-cover"

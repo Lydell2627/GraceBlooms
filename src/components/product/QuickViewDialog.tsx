@@ -64,7 +64,7 @@ export function QuickViewDialog({ product, open, onOpenChange }: QuickViewDialog
                         className="relative aspect-square md:aspect-auto bg-muted"
                     >
                         <Image
-                            src={product.image || "/product-placeholder.png"}
+                            src={product.image || "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn"}
                             alt={product.name}
                             fill
                             className="object-cover"

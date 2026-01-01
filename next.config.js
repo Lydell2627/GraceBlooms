@@ -8,7 +8,7 @@ await import("./src/env.js");
 const nextConfig = {
     reactStrictMode: true,
     images: {
-        domains: ["images.unsplash.com", "source.unsplash.com", "via.placeholder.com"],
+        domains: ["images.unsplash.com", "source.unsplash.com", "via.placeholder.com", "utfs.io", "2lcifuj23a.ufs.sh"],
     }
 };
 

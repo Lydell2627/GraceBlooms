@@ -111,7 +111,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                     <div className="space-y-4">
                         <div className="group relative aspect-square overflow-hidden rounded-2xl bg-muted border shadow-sm">
                             <Image
-                                src={product.image || "/product-placeholder.png"}
+                                src={product.image || "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn"}
                                 alt={product.name}
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-105"
