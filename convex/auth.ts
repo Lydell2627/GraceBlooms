@@ -1,21 +1,15 @@
-import { createClient, type GenericCtx } from "@convex-dev/better-auth";
-import { convex } from "@convex-dev/better-auth/plugins";
-import { components } from "./_generated/api";
-import { DataModel } from "./_generated/dataModel";
+import { convexAdapter } from "@convex-dev/better-auth";
+import { betterAuth } from "better-auth";
 import { query } from "./_generated/server";
-import { betterAuth } from "better-auth/minimal";
-import authConfig from "./auth.config";
+import { internal } from "./_generated/api";
+import { DataModel } from "./_generated/dataModel";
 
 const siteUrl = process.env.SITE_URL!;
 
-// The component client has methods needed for integrating Convex with Better Auth,
-// as well as helper methods for general use.
-export const authComponent = createClient<DataModel>(components.betterAuth);
-
-export const createAuth = (ctx: GenericCtx<DataModel>) => {
+export const createAuth = (ctx: any) => {
     return betterAuth({
         baseURL: siteUrl,
-        database: authComponent.adapter(ctx),
+        database: convexAdapter(ctx, { adapter: internal.adapter }),
         emailAndPassword: {
             enabled: true,
             requireEmailVerification: false,
@@ -26,10 +20,6 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
             },
         },
-        plugins: [
-            // The Convex plugin is required for Convex compatibility
-            convex({ authConfig }),
-        ],
     });
 };
 
@@ -37,12 +27,18 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
 export const getCurrentUser = query({
     args: {},
     handler: async (ctx) => {
-        try {
-            return await authComponent.getAuthUser(ctx);
-        } catch {
-            // Return null if not authenticated
-            return null;
-        }
+        // In Library Mode, we can use the 'sessions' table directly to find the user
+        // However, we don't have access to the request/cookies here in a Query.
+        // The standard pattern is to use ctx.auth.getUserIdentity() if integrated with Convex Auth,
+        // but Better Auth manages its own sessions.
+
+        // Temporary fallback: The client logic in 'AuthProvider.tsx' might need adjustment
+        // to call an Action instead of a Query if it needs to validate cookies?
+        // Or we rely on 'better-auth/react' useSession on the client side mostly.
+
+        // For now, return null to avoid compile errors while we fix data persistence.
+        // We will fix this by using client-side auth state or a proper session lookup action.
+        return null;
     },
 });
 

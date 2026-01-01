@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useQuery } from "convex/react";
 import { api } from "~/convex/_generated/api";
+import { useSession } from "~/lib/auth-client";
 
 interface AuthContextType {
     user: {
@@ -29,8 +30,9 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    // Use the Convex query to get the authenticated user from Better Auth
-    const authUser = useQuery(api.auth.getCurrentUser);
+    // Use Better Auth client-side session management
+    const { data: session, isPending } = useSession();
+    const authUser = session?.user;
 
     // Fetch user role from our users table
     const convexUser = useQuery(
@@ -38,8 +40,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authUser?.email ? { email: authUser.email } : "skip"
     );
 
-    // authUser === undefined means loading, null means not authenticated
-    const isLoading = authUser === undefined || (authUser !== null && convexUser === undefined);
+    // isLoading definition:
+    // 1. Session is checking (isPending)
+    // 2. Session exists but Convex User is loading
+    const isLoading = isPending || (!!authUser && convexUser === undefined);
 
     // Debug logging
     React.useEffect(() => {
@@ -53,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const value = React.useMemo(() => {
         const user = authUser && convexUser ? {
-            id: String(authUser._id), // Convex uses _id
+            id: authUser.id, // Better Auth uses 'id'
             name: authUser.name,
             email: authUser.email,
             image: authUser.image,
