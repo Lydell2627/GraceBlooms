@@ -3,12 +3,7 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import {
-    Calculator,
-    Calendar,
-    CreditCard,
-    Settings,
     Smile,
-    User,
     Search,
     Flower2,
     TrendingUp,
@@ -24,7 +19,6 @@ import {
     CommandItem,
     CommandList,
     CommandSeparator,
-    CommandShortcut,
 } from "~/components/ui/command"
 import { useQuery } from "convex/react"
 import { api } from "~/convex/_generated/api"

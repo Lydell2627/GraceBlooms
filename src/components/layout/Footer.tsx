@@ -6,7 +6,6 @@ import { Flower2, Mail, MapPin, Phone, Instagram, Twitter, Facebook } from "luci
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { cn } from "~/lib/utils";
 
 const footerLinks = {
     shop: [

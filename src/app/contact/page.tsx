@@ -1,7 +1,6 @@
 import { Navbar } from "~/components/layout/Navbar";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea"; // Assuming you might have a Textarea component, or I'll use standard textarea with class
 import { Mail, MapPin, Phone } from "lucide-react";
 
 export default function ContactPage() {

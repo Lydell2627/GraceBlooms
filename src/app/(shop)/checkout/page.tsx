@@ -3,7 +3,6 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import { motion, useReducedMotion } from "framer-motion"
 import {
     ChevronLeft,

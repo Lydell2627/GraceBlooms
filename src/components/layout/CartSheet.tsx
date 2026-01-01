@@ -17,7 +17,6 @@ import {
 } from "~/components/ui/sheet";
 import { Separator } from "~/components/ui/separator";
 import { Badge } from "~/components/ui/badge";
-import { cn } from "~/lib/utils";
 
 interface CartSheetProps {
     children: React.ReactNode;

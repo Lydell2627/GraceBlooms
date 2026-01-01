@@ -12,7 +12,6 @@ import {
     LogOut,
     Flower2,
     Menu,
-    X,
     ChevronRight,
     AlertTriangle,
 } from "lucide-react";
@@ -22,8 +21,6 @@ import { ThemeToggle } from "~/app/_components/ThemeToggle";
 import {
     Sheet,
     SheetContent,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger,
 } from "~/components/ui/sheet";
 import { useAuth } from "~/app/_components/AuthProvider";
@@ -75,7 +72,7 @@ export default function AdminLayout({
     const pathname = usePathname();
     const router = useRouter();
     const [mobileOpen, setMobileOpen] = React.useState(false);
-    const { user, isAuthenticated, isAdmin, isLoading } = useAuth();
+    const { isAuthenticated, isAdmin, isLoading } = useAuth();
 
     // Redirect to sign-in if not authenticated (using useEffect to avoid setState during render)
     React.useEffect(() => {
