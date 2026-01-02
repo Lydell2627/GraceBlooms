@@ -306,7 +306,7 @@ export function Navbar() {
                             <SheetHeader>
                                 <SheetTitle className="font-serif text-left">Menu</SheetTitle>
                             </SheetHeader>
-                            <nav className="mt-8 flex flex-col gap-1">
+                            <nav className="mt-8 flex flex-col gap-2">
                                 {[
                                     { href: "/catalog", label: "Browse Catalog" },
                                     { href: "/catalog?category=wedding", label: "Wedding" },

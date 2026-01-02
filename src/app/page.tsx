@@ -229,7 +229,7 @@ export default function Home() {
                             initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                            className="mb-8 font-serif text-5xl font-bold leading-[1.1] text-white md:text-7xl lg:text-8xl"
+                            className="mb-6 sm:mb-8 font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.15] text-white"
                         >
                             {heroHeadline.split(" ").slice(0, -2).join(" ")}
                             <br />
@@ -243,7 +243,7 @@ export default function Home() {
                             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6, duration: 0.6 }}
-                            className="mx-auto mb-10 max-w-2xl text-lg text-white/80 md:text-xl leading-relaxed"
+                            className="mx-auto mb-8 sm:mb-10 max-w-2xl text-base sm:text-lg md:text-xl text-white/80 leading-relaxed px-2"
                         >
                             {heroSubheadline}
                         </motion.p>
@@ -253,15 +253,15 @@ export default function Home() {
                             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.8, duration: 0.6 }}
-                            className="mb-6 flex flex-col items-center justify-center gap-4 sm:flex-row"
+                            className="mb-4 sm:mb-6 flex flex-col items-center justify-center gap-3 sm:gap-4 px-4 sm:px-0"
                         >
-                            <Button size="lg" className="min-w-[200px] bg-green-600 hover:bg-green-500" asChild>
+                            <Button size="lg" className="w-full sm:w-auto sm:min-w-[200px] bg-green-600 hover:bg-green-500 text-base" asChild>
                                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                                     <MessageCircle className="mr-2 h-5 w-5" />
                                     WhatsApp to Order
                                 </a>
                             </Button>
-                            <Button size="lg" variant="premium" asChild className="min-w-[200px]">
+                            <Button size="lg" variant="premium" asChild className="w-full sm:w-auto sm:min-w-[200px] text-base">
                                 <Link href="/contact">
                                     <Mail className="mr-2 h-4 w-4" />
                                     Get a Quote
@@ -274,15 +274,15 @@ export default function Home() {
                             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.9, duration: 0.6 }}
-                            className="mb-12 flex flex-col items-center justify-center gap-3 sm:flex-row"
+                            className="mb-8 sm:mb-12 flex flex-col items-center justify-center gap-3 px-4 sm:px-0 sm:flex-row"
                         >
-                            <Button size="lg" variant="glass" className="text-white" asChild>
+                            <Button size="lg" variant="glass" className="w-full sm:w-auto text-white" asChild>
                                 <a href={`tel:${settings?.phoneNumber || "+919876543210"}`}>
                                     <Phone className="mr-2 h-4 w-4" />
                                     Call Now
                                 </a>
                             </Button>
-                            <Button size="lg" variant="glass" className="text-white" asChild>
+                            <Button size="lg" variant="glass" className="w-full sm:w-auto text-white" asChild>
                                 <Link href="/catalog">
                                     Browse Catalog
                                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -295,7 +295,7 @@ export default function Home() {
                             initial={prefersReducedMotion ? {} : { opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 1, duration: 0.6 }}
-                            className="flex flex-wrap items-center justify-center gap-2"
+                            className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 px-4 sm:px-0 mb-6 sm:mb-0"
                         >
                             {occasions.map((occasion, index) => (
                                 <motion.div
