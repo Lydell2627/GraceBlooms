@@ -2,237 +2,242 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
 import {
-    DollarSign,
-    ShoppingCart,
-    Package,
-    Users,
+    LayoutDashboard,
+    Flower2,
+    Briefcase,
+    Settings,
+    HelpCircle,
+    Bot,
+    MessageSquare,
     TrendingUp,
-    ArrowUpRight,
-    ArrowDownRight,
-    Eye,
+    Users,
+    Calendar
 } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "~/convex/_generated/api";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+
+
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
-import { Skeleton } from "~/components/ui/skeleton";
+import { ScrollReveal } from "~/components/ui/scroll-reveal";
 
-export default function AdminDashboardPage() {
-    const products = useQuery(api.products.list, {});
-    const orders = useQuery(api.orders.list, {});
-    const users = useQuery(api.users.list, {});
+const adminLinks = [
+    {
+        title: "Catalog",
+        description: "Manage flower arrangements and products",
+        href: "/admin/catalog",
+        icon: Flower2,
+        color: "bg-primary/10 text-primary",
+    },
+    {
+        title: "Services",
+        description: "Manage service offerings",
+        href: "/admin/services",
+        icon: Briefcase,
+        color: "bg-sage/10 text-sage",
+    },
+    {
+        title: "Settings",
+        description: "Site settings, contact info, hero content",
+        href: "/admin/settings",
+        icon: Settings,
+        color: "bg-blush/10 text-blush",
+    },
+    {
+        title: "FAQ",
+        description: "Manage frequently asked questions",
+        href: "/admin/faq",
+        icon: HelpCircle,
+        color: "bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400",
+    },
+    {
+        title: "AI Bot",
+        description: "Configure AI assistant settings",
+        href: "/admin/ai",
+        icon: Bot,
+        color: "bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400",
+    },
+];
 
-    const isLoading = products === undefined || orders === undefined || users === undefined;
+export default function AdminDashboard() {
+    const prefersReducedMotion = useReducedMotion();
 
-    // Calculate stats
-    const totalRevenue = orders?.reduce((sum, order) => sum + order.total, 0) ?? 0;
-    const pendingOrders = orders?.filter((o) => o.status === "PENDING").length ?? 0;
-    const lowStockProducts = products?.filter((p) => p.stock < 10).length ?? 0;
+    // Fetch dashboard stats
+    const catalogItems = useQuery(api.catalog.listAll, {});
+    const services = useQuery(api.services.listAll, {});
+    const inquiries = useQuery(api.contact.list, {});
+    const faqItems = useQuery(api.faq.listAll, {});
 
     const stats = [
         {
-            title: "Total Revenue",
-            value: `$${totalRevenue.toLocaleString()}`,
-            change: "+12.5%",
-            trend: "up",
-            icon: DollarSign,
+            label: "Catalog Items",
+            value: catalogItems?.length ?? 0,
+            icon: Flower2,
+            color: "text-primary",
+            description: `${catalogItems?.filter(i => i.published).length ?? 0} published`,
         },
         {
-            title: "Total Orders",
-            value: orders?.length.toString() ?? "0",
-            change: "+8.2%",
-            trend: "up",
-            icon: ShoppingCart,
+            label: "Services",
+            value: services?.length ?? 0,
+            icon: Briefcase,
+            color: "text-sage",
+            description: `${services?.filter(s => s.published).length ?? 0} active`,
         },
         {
-            title: "Products",
-            value: products?.length.toString() ?? "0",
-            subtext: lowStockProducts > 0 ? `${lowStockProducts} low stock` : "All stocked",
-            icon: Package,
+            label: "Inquiries",
+            value: inquiries?.length ?? 0,
+            icon: MessageSquare,
+            color: "text-blush",
+            description: `${inquiries?.filter(i => i.status === "new").length ?? 0} new`,
         },
         {
-            title: "Customers",
-            value: users?.filter((u) => u.role === "CUSTOMER").length.toString() ?? "0",
-            change: "+4.1%",
-            trend: "up",
-            icon: Users,
+            label: "FAQ Items",
+            value: faqItems?.length ?? 0,
+            icon: HelpCircle,
+            color: "text-amber-500",
+            description: `${faqItems?.filter(f => f.published).length ?? 0} published`,
         },
     ];
 
-    const recentOrders = orders?.slice(0, 5) ?? [];
+    // Recent inquiries
+    const recentInquiries = inquiries?.slice(0, 5) ?? [];
 
     return (
-        <div className="space-y-8">
-            {/* Stats Grid */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {stats.map((stat) => (
-                    <Card key={stat.title} className="border-none shadow-sm">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">
-                                {stat.title}
-                            </CardTitle>
-                            <stat.icon className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            {isLoading ? (
-                                <Skeleton className="h-8 w-24" />
-                            ) : (
-                                <>
-                                    <div className="text-2xl font-bold">{stat.value}</div>
-                                    {stat.change && (
-                                        <p className="flex items-center text-xs text-muted-foreground">
-                                            {stat.trend === "up" ? (
-                                                <ArrowUpRight className="mr-1 h-3 w-3 text-sage" />
-                                            ) : (
-                                                <ArrowDownRight className="mr-1 h-3 w-3 text-blush" />
-                                            )}
-                                            <span className={stat.trend === "up" ? "text-sage" : "text-blush"}>
-                                                {stat.change}
-                                            </span>
-                                            <span className="ml-1">from last month</span>
-                                        </p>
-                                    )}
-                                    {stat.subtext && (
-                                        <p className="text-xs text-muted-foreground">{stat.subtext}</p>
-                                    )}
-                                </>
-                            )}
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+        <main className="min-h-screen bg-background">
 
-            <div className="grid gap-6 lg:grid-cols-2">
-                {/* Recent Orders */}
-                <Card className="border-none shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between">
+
+            <div className="container mx-auto px-6 pt-28 pb-16">
+                {/* Header */}
+                <motion.div
+                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-12"
+                >
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
+                            <LayoutDashboard className="h-6 w-6 text-primary" />
+                        </div>
                         <div>
-                            <CardTitle>Recent Orders</CardTitle>
-                            <CardDescription>Latest customer orders</CardDescription>
+                            <h1 className="font-serif text-3xl font-bold">Admin Dashboard</h1>
+                            <p className="text-muted-foreground">Manage your Grace Blooms catalog</p>
                         </div>
-                        <Button variant="outline" size="sm" asChild>
-                            <Link href="/admin/orders">View All</Link>
-                        </Button>
-                    </CardHeader>
-                    <CardContent>
-                        {isLoading ? (
-                            <div className="space-y-4">
-                                {[1, 2, 3].map((i) => (
-                                    <div key={i} className="flex items-center gap-4">
-                                        <Skeleton className="h-10 w-10 rounded-full" />
-                                        <div className="flex-1 space-y-2">
-                                            <Skeleton className="h-4 w-32" />
-                                            <Skeleton className="h-3 w-24" />
-                                        </div>
-                                        <Skeleton className="h-6 w-16" />
-                                    </div>
-                                ))}
-                            </div>
-                        ) : recentOrders.length === 0 ? (
-                            <p className="text-center text-muted-foreground py-8">No orders yet</p>
-                        ) : (
-                            <div className="space-y-4">
-                                {recentOrders.map((order) => (
-                                    <div
-                                        key={order._id}
-                                        className="flex items-center justify-between rounded-lg border p-3"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                                                <ShoppingCart className="h-4 w-4" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-medium">
-                                                    {order.userName || order.userEmail || "Guest"}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    {order.items.length} items · ${order.total.toFixed(2)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <Badge
-                                            variant={
-                                                order.status === "PENDING"
-                                                    ? "secondary"
-                                                    : order.status === "DELIVERED"
-                                                        ? "sage"
-                                                        : "outline"
-                                            }
-                                        >
-                                            {order.status.toLowerCase()}
-                                        </Badge>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                    </div>
+                </motion.div>
 
-                {/* Quick Actions */}
-                <Card className="border-none shadow-sm">
-                    <CardHeader>
-                        <CardTitle>Quick Actions</CardTitle>
-                        <CardDescription>Common admin tasks</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid gap-3">
-                        <Button asChild className="justify-start">
-                            <Link href="/admin/manage-products">
-                                <Package className="mr-2 h-4 w-4" />
-                                Add New Product
-                            </Link>
+                {/* Stats Grid */}
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-12">
+                    {stats.map((stat, i) => {
+                        const Icon = stat.icon;
+                        return (
+                            <ScrollReveal key={i} delay={i * 0.1}>
+                                <motion.div
+                                    whileHover={prefersReducedMotion ? {} : { y: -4 }}
+                                    className="rounded-2xl border bg-card p-6 transition-all hover:shadow-bloom"
+                                >
+                                    <div className="flex items-center justify-between mb-4">
+                                        <Icon className={`h-8 w-8 ${stat.color}`} />
+                                        <span className="text-3xl font-bold">{stat.value}</span>
+                                    </div>
+                                    <p className="font-medium">{stat.label}</p>
+                                    <p className="text-sm text-muted-foreground">{stat.description}</p>
+                                </motion.div>
+                            </ScrollReveal>
+                        );
+                    })}
+                </div>
+
+                {/* Quick Actions Grid */}
+                <div className="mb-12">
+                    <h2 className="font-serif text-2xl font-bold mb-6">Quick Actions</h2>
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {adminLinks.map((link, i) => {
+                            const Icon = link.icon;
+                            return (
+                                <ScrollReveal key={i} delay={i * 0.1}>
+                                    <Link href={link.href}>
+                                        <motion.div
+                                            whileHover={prefersReducedMotion ? {} : { y: -4, scale: 1.02 }}
+                                            className="group rounded-2xl border bg-card p-6 transition-all hover:shadow-bloom cursor-pointer"
+                                        >
+                                            <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${link.color} transition-transform group-hover:scale-110`}>
+                                                <Icon className="h-6 w-6" />
+                                            </div>
+                                            <h3 className="font-serif text-xl font-bold mb-2">{link.title}</h3>
+                                            <p className="text-sm text-muted-foreground">{link.description}</p>
+                                        </motion.div>
+                                    </Link>
+                                </ScrollReveal>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Recent Inquiries */}
+                <div>
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="font-serif text-2xl font-bold">Recent Inquiries</h2>
+                        <Button variant="outline" size="sm" asChild>
+                            <Link href="/admin/inquiries">View All</Link>
                         </Button>
-                        <Button variant="outline" asChild className="justify-start">
-                            <Link href="/admin/orders">
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Pending Orders
-                                {pendingOrders > 0 && (
-                                    <Badge variant="destructive" className="ml-auto">
-                                        {pendingOrders}
-                                    </Badge>
-                                )}
-                            </Link>
-                        </Button>
-                        <Button variant="outline" asChild className="justify-start">
-                            <Link href="/admin/users">
-                                <Users className="mr-2 h-4 w-4" />
-                                Manage Users
-                            </Link>
-                        </Button>
-                        <Button variant="outline" asChild className="justify-start">
-                            <Link href="/" target="_blank">
-                                <TrendingUp className="mr-2 h-4 w-4" />
-                                View Live Store
-                            </Link>
-                        </Button>
-                    </CardContent>
-                </Card>
+                    </div>
+
+                    {recentInquiries.length > 0 ? (
+                        <div className="rounded-2xl border bg-card overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead>
+                                        <tr className="border-b bg-muted/30">
+                                            <th className="px-6 py-3 text-left text-sm font-medium">Name</th>
+                                            <th className="px-6 py-3 text-left text-sm font-medium">Email</th>
+                                            <th className="px-6 py-3 text-left text-sm font-medium">Source</th>
+                                            <th className="px-6 py-3 text-left text-sm font-medium">Status</th>
+                                            <th className="px-6 py-3 text-left text-sm font-medium">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {recentInquiries.map((inquiry) => (
+                                            <tr key={inquiry._id} className="border-b last:border-0 hover:bg-muted/20">
+                                                <td className="px-6 py-4 font-medium">{inquiry.name}</td>
+                                                <td className="px-6 py-4 text-muted-foreground">{inquiry.email}</td>
+                                                <td className="px-6 py-4">
+                                                    <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-medium capitalize">
+                                                        {inquiry.source.replace("_", " ")}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium capitalize ${inquiry.status === "new"
+                                                        ? "bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                                                        : inquiry.status === "contacted"
+                                                            ? "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
+                                                            : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400"
+                                                        }`}>
+                                                        {inquiry.status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-muted-foreground">
+                                                    {new Date(inquiry.createdAt).toLocaleDateString()}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="rounded-2xl border bg-card p-12 text-center">
+                            <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
+                            <h3 className="font-medium mb-2">No inquiries yet</h3>
+                            <p className="text-sm text-muted-foreground">
+                                When customers submit contact forms, they&apos;ll appear here.
+                            </p>
+                        </div>
+                    )}
+                </div>
             </div>
 
-            {/* Low Stock Alert */}
-            {!isLoading && lowStockProducts > 0 && (
-                <Card className="border-blush/20 bg-blush/5">
-                    <CardHeader>
-                        <CardTitle className="text-blush">Low Stock Alert</CardTitle>
-                        <CardDescription>
-                            {lowStockProducts} products have stock below 10 units
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex flex-wrap gap-2">
-                            {products
-                                ?.filter((p) => p.stock < 10)
-                                .slice(0, 5)
-                                .map((product) => (
-                                    <Badge key={product._id} variant="outline" className="border-blush/30">
-                                        {product.name} ({product.stock} left)
-                                    </Badge>
-                                ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
-        </div>
+
+        </main>
     );
 }

@@ -4,56 +4,60 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ShoppingBag, Heart, Eye } from "lucide-react";
-import { useCart } from "~/hooks/useCart";
+import { MessageCircle, Phone, Mail, Eye, Heart } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { Rating } from "./Rating";
-import { Price } from "./Price";
 import { DeliveryBadge } from "./DeliveryBadge";
 import { cn } from "~/lib/utils";
 import { toast } from "sonner";
 
+interface CatalogItem {
+    id: string;
+    title: string;
+    slug: string;
+    shortDescription: string;
+    description: string;
+    priceMin: number;
+    priceMax: number;
+    currency: string;
+    category: string;
+    tags: string[];
+    images: string[];
+    customizationAvailable?: boolean;
+    leadTimeDays?: number;
+    deliveryNotes?: string;
+}
+
 interface ProductCardProps {
-    product: {
-        id: string;
-        name: string;
-        description: string;
-        price: number;
-        image: string | null;
-        occasion: string;
-        stock?: number;
-    };
-    onQuickView?: (product: ProductCardProps["product"]) => void;
+    product: CatalogItem;
+    onQuickView?: (product: CatalogItem) => void;
     className?: string;
 }
 
 export function ProductCard({ product, onQuickView, className }: ProductCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [isWishlisted, setIsWishlisted] = useState(false);
-    const addItem = useCart((state) => state.addItem);
     const prefersReducedMotion = useReducedMotion();
-
-    // Generate a consistent rating for demo (based on product id)
-    const rating = 3.5 + (product.id.charCodeAt(0) % 15) / 10;
-
-    const handleAddToCart = () => {
-        addItem({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-        });
-        toast.success("Added to cart", {
-            description: `${product.name} has been added to your cart.`,
-        });
-    };
 
     const handleWishlist = () => {
         setIsWishlisted(!isWishlisted);
         toast(isWishlisted ? "Removed from wishlist" : "Added to wishlist", {
-            description: product.name,
+            description: product.title,
         });
     };
+
+    // Format price range
+    const priceDisplay = product.priceMin === product.priceMax
+        ? `₹${product.priceMin.toLocaleString("en-IN")}`
+        : `₹${product.priceMin.toLocaleString("en-IN")}–₹${product.priceMax.toLocaleString("en-IN")}`;
+
+    // Generate WhatsApp message
+    const whatsappMessage = encodeURIComponent(
+        `Hi! I'm interested in "${product.title}" (${priceDisplay}). Can you help me with more details?`
+    );
+    const whatsappLink = `https://wa.me/919876543210?text=${whatsappMessage}`;
+
+    const mainImage = product.images?.[0] || "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn";
 
     return (
         <motion.div
@@ -68,10 +72,10 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* Image Container */}
-            <Link href={`/products/${product.id}`} className="relative aspect-[4/5] overflow-hidden bg-muted">
+            <Link href={`/catalog/${product.slug}`} className="relative aspect-[4/5] overflow-hidden bg-muted">
                 <Image
-                    src={product.image || "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn"}
-                    alt={product.name}
+                    src={mainImage}
+                    alt={product.title}
                     fill
                     className={cn(
                         "object-cover transition-transform duration-700 ease-premium",
@@ -89,6 +93,7 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
                             transition={{ duration: 0.2 }}
                             className="absolute inset-0 flex items-center justify-center gap-3 bg-black/40 backdrop-blur-[2px]"
                         >
+                            {/* WhatsApp Quick Action */}
                             <motion.div
                                 initial={prefersReducedMotion ? {} : { scale: 0.8, y: 10 }}
                                 animate={{ scale: 1, y: 0 }}
@@ -96,14 +101,12 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
                             >
                                 <Button
                                     size="icon"
-                                    variant="secondary"
-                                    className="h-12 w-12 rounded-full bg-white/95 text-foreground shadow-lg hover:bg-white hover:scale-110 transition-transform"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleAddToCart();
-                                    }}
+                                    className="h-12 w-12 rounded-full bg-green-500 text-white shadow-lg hover:bg-green-400 hover:scale-110 transition-transform"
+                                    asChild
                                 >
-                                    <ShoppingBag className="h-5 w-5" />
+                                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                                        <MessageCircle className="h-5 w-5" />
+                                    </a>
                                 </Button>
                             </motion.div>
                             {onQuickView && (
@@ -152,48 +155,77 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
                     </motion.div>
                 </button>
 
-                {/* Occasion Badge */}
+                {/* Category Badge */}
                 <Badge
                     variant="glass"
                     className="absolute left-3 top-3 z-10 text-xs font-medium capitalize backdrop-blur-md"
                 >
-                    {product.occasion.toLowerCase()}
+                    {product.category.toLowerCase()}
                 </Badge>
+
+                {/* Tags */}
+                {product.tags.length > 0 && (
+                    <div className="absolute left-3 bottom-3 z-10 flex flex-wrap gap-1">
+                        {product.tags.slice(0, 2).map((tag) => (
+                            <Badge
+                                key={tag}
+                                variant={tag === "featured" ? "default" : tag === "new" ? "sage" : "secondary"}
+                                className="text-[10px] font-medium capitalize"
+                            >
+                                {tag}
+                            </Badge>
+                        ))}
+                    </div>
+                )}
             </Link>
 
             {/* Content */}
             <div className="flex flex-1 flex-col p-5">
                 <div className="mb-2 flex items-start justify-between gap-2">
-                    <Link href={`/products/${product.id}`} className="group/title">
+                    <Link href={`/catalog/${product.slug}`} className="group/title">
                         <h3 className="font-serif text-lg font-semibold leading-tight text-foreground line-clamp-1 group-hover/title:text-primary transition-colors">
-                            {product.name}
+                            {product.title}
                         </h3>
                     </Link>
                 </div>
 
                 <p className="mb-3 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-                    {product.description}
+                    {product.shortDescription}
                 </p>
 
-                <div className="mb-3 flex items-center gap-2">
-                    <Rating value={rating} size="sm" />
-                    <span className="text-xs text-muted-foreground">
-                        ({Math.floor(rating * 20)})
-                    </span>
-                </div>
-
                 <div className="mt-auto flex items-center justify-between">
-                    <Price value={product.price} size="md" />
-                    <DeliveryBadge type="same-day" />
+                    <div className="flex flex-col">
+                        <span className="text-lg font-bold text-primary">
+                            {priceDisplay}
+                        </span>
+                        {product.customizationAvailable && (
+                            <span className="text-xs text-muted-foreground">Customizable</span>
+                        )}
+                    </div>
+                    <DeliveryBadge type={product.leadTimeDays === 1 ? "same-day" : "standard"} />
                 </div>
             </div>
 
-            {/* Quick Add Button (Mobile) */}
+            {/* Contact CTAs (Mobile) */}
             <div className="border-t p-4 md:hidden">
-                <Button onClick={handleAddToCart} className="w-full rounded-xl" size="sm">
-                    <ShoppingBag className="mr-2 h-4 w-4" />
-                    Add to Cart
-                </Button>
+                <div className="flex gap-2">
+                    <Button className="flex-1 rounded-xl bg-green-600 hover:bg-green-500" size="sm" asChild>
+                        <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                            <MessageCircle className="mr-2 h-4 w-4" />
+                            WhatsApp
+                        </a>
+                    </Button>
+                    <Button variant="outline" size="sm" className="rounded-xl" asChild>
+                        <a href="tel:+919876543210">
+                            <Phone className="h-4 w-4" />
+                        </a>
+                    </Button>
+                    <Button variant="outline" size="sm" className="rounded-xl" asChild>
+                        <Link href="/contact">
+                            <Mail className="h-4 w-4" />
+                        </Link>
+                    </Button>
+                </div>
             </div>
         </motion.div>
     );

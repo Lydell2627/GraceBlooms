@@ -3,10 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import NextImage from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Flower2, ShoppingBag, Menu, User, LogOut, Sparkles } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Flower2, Menu, User, LogOut, Sparkles, Phone, MessageCircle } from "lucide-react";
 
-import { useCart } from "~/hooks/useCart";
 import { useAuth } from "~/app/_components/AuthProvider";
 import { signOut } from "~/lib/auth-client";
 import {
@@ -19,7 +18,6 @@ import {
     navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import {
     Sheet,
     SheetContent,
@@ -36,47 +34,43 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { ThemeToggle } from "~/app/_components/ThemeToggle";
 import { cn } from "~/lib/utils";
-import { CartSheet } from "./CartSheet";
-import { CommandPalette } from "./CommandPalette";
 
 const collections: { title: string; href: string; description: string }[] = [
     {
         title: "Wedding Arrangements",
-        href: "/products?category=wedding",
+        href: "/catalog?category=wedding",
         description: "Elegant white lilies, roses, and custom bridal bouquets.",
     },
     {
         title: "Anniversary Blooms",
-        href: "/products?category=anniversary",
+        href: "/catalog?category=anniversary",
         description: "Romantic red roses and seasonal favorites for your special milestones.",
     },
     {
         title: "Birthday Surprises",
-        href: "/products?category=birthday",
+        href: "/catalog?category=birthday",
         description: "Bright and cheerful mixes to celebrate another wonderful year.",
     },
     {
         title: "Sympathy & Funeral",
-        href: "/products?category=sympathy",
+        href: "/catalog?category=sympathy",
         description: "Respectful and serene tributes to honor and remember.",
     },
     {
-        title: "Indoor Plants",
-        href: "/products?category=plants",
-        description: "Long-lasting greenery to bring nature into your home.",
+        title: "Custom Orders",
+        href: "/catalog?category=custom",
+        description: "Work with our designers to create something unique.",
     },
     {
-        title: "Gift Baskets",
-        href: "/products?category=gifts",
-        description: "Combinations of flowers and gourmet treats.",
+        title: "All Occasions",
+        href: "/catalog",
+        description: "Browse our complete catalog of arrangements.",
     },
 ];
 
 export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const [scrolled, setScrolled] = React.useState(false);
-    const cartItems = useCart((state) => state.items);
-    const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
     const { user, isAuthenticated, isLoading } = useAuth();
     const prefersReducedMotion = useReducedMotion();
 
@@ -148,28 +142,28 @@ export function Navbar() {
                                             <NavigationMenuLink asChild>
                                                 <Link
                                                     className="group flex h-full w-full select-none flex-col justify-end rounded-2xl bg-gradient-to-b from-primary/15 to-primary/5 p-6 no-underline outline-none transition-all duration-300 hover:from-primary/25 hover:to-primary/10 focus:shadow-md"
-                                                    href="/products"
+                                                    href="/catalog"
                                                 >
                                                     <div className="relative">
                                                         <Sparkles className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110" />
                                                     </div>
                                                     <div className="mb-2 mt-4 text-lg font-medium font-serif">
-                                                        Seasonal Specialties
+                                                        Browse Catalog
                                                     </div>
                                                     <p className="text-sm leading-tight text-muted-foreground">
-                                                        Hand-picked blooms at their peak freshness. Updated daily.
+                                                        Discover our handcrafted arrangements for every occasion.
                                                     </p>
                                                 </Link>
                                             </NavigationMenuLink>
                                         </li>
-                                        <ListItem href="/products" title="All Flowers">
-                                            Browse our entire collection of fresh arrangements.
+                                        <ListItem href="/services" title="Our Services">
+                                            Wedding florals, subscriptions, and custom designs.
                                         </ListItem>
-                                        <ListItem href="/#about" title="Our Story">
-                                            Learn about our commitment to quality and local growers.
+                                        <ListItem href="/about" title="Our Story">
+                                            Learn about our commitment to quality and craftsmanship.
                                         </ListItem>
-                                        <ListItem href="/chat" title="Flower Care">
-                                            Get advice on how to keep your blooms lasting longer.
+                                        <ListItem href="/contact" title="Contact Us">
+                                            Get in touch via WhatsApp, phone, or email.
                                         </ListItem>
                                     </ul>
                                 </NavigationMenuContent>
@@ -193,11 +187,18 @@ export function Navbar() {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <Link href="/products" legacyBehavior passHref>
-                                    <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-accent/50")}>
-                                        Shop All
-                                    </NavigationMenuLink>
-                                </Link>
+                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-accent/50")}>
+                                    <Link href="/catalog">
+                                        Catalog
+                                    </Link>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-accent/50")}>
+                                    <Link href={isAuthenticated ? "/contact" : "/sign-in?redirect=/contact"}>
+                                        Contact
+                                    </Link>
+                                </NavigationMenuLink>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
@@ -205,38 +206,24 @@ export function Navbar() {
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-1 lg:gap-2">
-                    {/* Search / Command Palette */}
-                    <CommandPalette />
-
                     {/* Theme Toggle */}
                     <ThemeToggle />
 
-                    {/* Cart with animated badge */}
-                    <CartSheet>
-                        <Button variant="ghost" size="icon" className="relative">
-                            <ShoppingBag className="h-5 w-5" />
-                            <AnimatePresence mode="wait">
-                                {cartCount > 0 && (
-                                    <motion.div
-                                        key={cartCount}
-                                        initial={{ scale: 0, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        exit={{ scale: 0, opacity: 0 }}
-                                        transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                                        className="absolute -right-1 -top-1"
-                                    >
-                                        <Badge
-                                            variant="default"
-                                            className="h-5 min-w-5 rounded-full px-1.5 text-xs flex items-center justify-center shadow-bloom"
-                                        >
-                                            {cartCount > 9 ? "9+" : cartCount}
-                                        </Badge>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                            <span className="sr-only">Cart ({cartCount} items)</span>
-                        </Button>
-                    </CartSheet>
+                    {/* Contact Quick Actions (Desktop) - Only show when authenticated */}
+                    {isAuthenticated && (
+                        <div className="hidden lg:flex items-center gap-1">
+                            <Button variant="ghost" size="icon" asChild className="text-primary hover:text-primary/80">
+                                <a href="tel:+919876543210" aria-label="Call us">
+                                    <Phone className="h-5 w-5" />
+                                </a>
+                            </Button>
+                            <Button variant="ghost" size="icon" asChild className="text-green-600 hover:text-green-500">
+                                <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                                    <MessageCircle className="h-5 w-5" />
+                                </a>
+                            </Button>
+                        </div>
+                    )}
 
                     {/* Desktop Auth - Conditional */}
                     <div className="hidden items-center gap-2 lg:flex">
@@ -272,11 +259,19 @@ export function Navbar() {
                                         </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem asChild className="rounded-lg">
-                                        <Link href="/orders" className="flex items-center gap-2">
-                                            <ShoppingBag className="h-4 w-4" />
-                                            My Orders
+                                        <Link href="/my-inquiries" className="flex items-center gap-2">
+                                            <MessageCircle className="h-4 w-4" />
+                                            My Inquiries
                                         </Link>
                                     </DropdownMenuItem>
+                                    {user.role === "ADMIN" && (
+                                        <DropdownMenuItem asChild className="rounded-lg">
+                                            <Link href="/admin" className="flex items-center gap-2">
+                                                <Sparkles className="h-4 w-4" />
+                                                Admin Dashboard
+                                            </Link>
+                                        </DropdownMenuItem>
+                                    )}
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
                                         onClick={handleSignOut}
@@ -313,10 +308,13 @@ export function Navbar() {
                             </SheetHeader>
                             <nav className="mt-8 flex flex-col gap-1">
                                 {[
-                                    { href: "/products", label: "Shop All" },
-                                    { href: "/products?category=wedding", label: "Wedding" },
-                                    { href: "/products?category=birthday", label: "Birthday" },
-                                    { href: "/products?category=anniversary", label: "Anniversary" },
+                                    { href: "/catalog", label: "Browse Catalog" },
+                                    { href: "/catalog?category=wedding", label: "Wedding" },
+                                    { href: "/catalog?category=birthday", label: "Birthday" },
+                                    { href: "/catalog?category=anniversary", label: "Anniversary" },
+                                    { href: "/services", label: "Services" },
+                                    { href: "/about", label: "About Us" },
+                                    { href: isAuthenticated ? "/contact" : "/sign-in?redirect=/contact", label: "Contact" },
                                 ].map((item, index) => (
                                     <motion.div
                                         key={item.href}
@@ -335,6 +333,24 @@ export function Navbar() {
                                 ))}
 
                                 <div className="my-4 h-px bg-border" />
+
+                                {/* Mobile Contact Quick Actions - Only show when authenticated */}
+                                {isAuthenticated && (
+                                    <div className="flex gap-2 px-4 mb-4">
+                                        <Button variant="outline" className="flex-1 rounded-xl" asChild>
+                                            <a href="tel:+919876543210">
+                                                <Phone className="h-4 w-4 mr-2" />
+                                                Call
+                                            </a>
+                                        </Button>
+                                        <Button className="flex-1 rounded-xl bg-green-600 hover:bg-green-500" asChild>
+                                            <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer">
+                                                <MessageCircle className="h-4 w-4 mr-2" />
+                                                WhatsApp
+                                            </a>
+                                        </Button>
+                                    </div>
+                                )}
 
                                 {/* Mobile Auth - Conditional */}
                                 {isLoading ? (
@@ -368,12 +384,21 @@ export function Navbar() {
                                             Profile
                                         </Link>
                                         <Link
-                                            href="/orders"
+                                            href="/my-inquiries"
                                             className="block rounded-xl px-4 py-3 text-lg font-medium transition-colors hover:bg-accent"
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
-                                            My Orders
+                                            My Inquiries
                                         </Link>
+                                        {user.role === "ADMIN" && (
+                                            <Link
+                                                href="/admin"
+                                                className="block rounded-xl px-4 py-3 text-lg font-medium transition-colors hover:bg-accent"
+                                                onClick={() => setMobileMenuOpen(false)}
+                                            >
+                                                Admin Dashboard
+                                            </Link>
+                                        )}
                                         <div className="px-4 mt-4">
                                             <Button
                                                 variant="outline"

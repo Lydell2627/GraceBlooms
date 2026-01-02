@@ -6,14 +6,17 @@ import { usePathname, useRouter } from "next/navigation";
 import {
     LayoutDashboard,
     Package,
-    ShoppingCart,
-    Users,
+    Briefcase,
+    HelpCircle,
+    Bot,
     Settings,
     LogOut,
     Flower2,
     Menu,
     ChevronRight,
     AlertTriangle,
+    MessageSquare,
+    Users,
 } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -28,8 +31,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 
 const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/admin/manage-products", label: "Products", icon: Package },
-    { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
+    { href: "/admin/catalog", label: "Catalog", icon: Package },
+    { href: "/admin/services", label: "Services", icon: Briefcase },
+    { href: "/admin/faq", label: "FAQ", icon: HelpCircle },
+    { href: "/admin/ai", label: "AI Bot", icon: Bot },
+    { href: "/admin/inquiries", label: "Inquiries", icon: MessageSquare },
     { href: "/admin/users", label: "Users", icon: Users },
 ];
 

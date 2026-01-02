@@ -5,6 +5,7 @@ import { ThemeProvider } from "~/app/_components/ThemeProvider";
 import { ConvexClientProvider } from "~/app/_components/ConvexClientProvider";
 import { AuthProvider } from "~/app/_components/AuthProvider";
 import { Toaster } from "~/components/ui/sonner";
+import { BotWidget } from "~/components/bot/BotWidget";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -18,7 +19,7 @@ const playfair = Playfair_Display({
 
 export const metadata = {
     title: "Grace Blooms | Artisanal Flower Boutique",
-    description: "Exquisite floral arrangements and botanical wonders. Grace Blooms - Emotions in Full Bloom.",
+    description: "Exquisite floral arrangements and botanical wonders. Contact us via WhatsApp, phone, or email to order.",
     icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
@@ -39,6 +40,7 @@ export default function RootLayout({
                             disableTransitionOnChange={false}
                         >
                             {children}
+                            <BotWidget />
                             <Toaster position="bottom-right" richColors />
                         </ThemeProvider>
                     </AuthProvider>

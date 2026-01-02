@@ -3,12 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Truck, Sparkles, Shield, Star, ChevronDown, User } from "lucide-react";
+import { ArrowRight, Sparkles, Truck, Shield, Star, ChevronDown, MessageCircle, Phone, Mail } from "lucide-react";
 import { Navbar } from "~/components/layout/Navbar";
 import { Footer } from "~/components/layout/Footer";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { Input } from "~/components/ui/input";
 import * as React from "react";
 import { useQuery } from "convex/react";
 import { api } from "~/convex/_generated/api";
@@ -16,54 +15,33 @@ import { ProductCard } from "~/components/product/ProductCard";
 import { QuickViewDialog } from "~/components/product/QuickViewDialog";
 import { ScrollReveal } from "~/components/ui/scroll-reveal";
 import { FloatingShape } from "~/components/ui/floating-element";
-import { useAuth } from "~/app/_components/AuthProvider";
-
 
 const occasions = [
-    "Wedding",
-    "Birthday",
-    "Anniversary",
-    "Sympathy",
-    "Thank You",
-    "Just Because",
+    { name: "Wedding", category: "wedding" },
+    { name: "Birthday", category: "birthday" },
+    { name: "Anniversary", category: "anniversary" },
+    { name: "Sympathy", category: "sympathy" },
+    { name: "Custom", category: "custom" },
 ];
 
 const collections = [
     {
         title: "Wedding",
         img: "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMgz19w4ualML4DajYpfn8mBi1RTGIFctgOHro",
-        count: "12 Items",
         description: "Elegant arrangements for your special day",
+        category: "wedding",
     },
     {
         title: "Anniversary",
         img: "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMP6rqR2S4CqkKBeOpjAJhMcQ0IZSFi3xlE4sU",
-        count: "8 Items",
         description: "Celebrate milestones with classic beauty",
+        category: "anniversary",
     },
     {
         title: "Sympathy",
         img: "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMyQeZhG7opIwWKlVO4xCf0dFXALQ7JUBujHkz",
-        count: "15 Items",
         description: "Heartfelt tributes that honor memories",
-    },
-];
-
-const valueProps = [
-    {
-        icon: Sparkles,
-        title: "Freshness Guaranteed",
-        description: "Sourced directly from local growers to ensure your blooms last longer.",
-    },
-    {
-        icon: Truck,
-        title: "Same Day Delivery",
-        description: "Order by 2PM for immediate delivery to brighten someone's day.",
-    },
-    {
-        icon: Shield,
-        title: "Artist Arrangements",
-        description: "Each bouquet is hand-crafted by our award-winning floral designers.",
+        category: "sympathy",
     },
 ];
 
@@ -88,24 +66,94 @@ const testimonials = [
     },
 ];
 
+// Type for catalog items from Convex
+interface CatalogItem {
+    _id: string;
+    title: string;
+    slug: string;
+    shortDescription: string;
+    description: string;
+    priceMin: number;
+    priceMax: number;
+    currency: string;
+    category: string;
+    tags: string[];
+    images: string[];
+    customizationAvailable?: boolean;
+    leadTimeDays?: number;
+    deliveryNotes?: string;
+    published: boolean;
+}
+
+// Type for ProductCard component
+interface ProductItem {
+    id: string;
+    title: string;
+    slug: string;
+    shortDescription: string;
+    description: string;
+    priceMin: number;
+    priceMax: number;
+    currency: string;
+    category: string;
+    tags: string[];
+    images: string[];
+    customizationAvailable?: boolean;
+    leadTimeDays?: number;
+    deliveryNotes?: string;
+}
+
+// Transform Convex item to ProductCard format
+function toProductCardItem(item: CatalogItem): ProductItem {
+    return {
+        id: item._id,
+        title: item.title,
+        slug: item.slug,
+        shortDescription: item.shortDescription || "",
+        description: item.description || "",
+        priceMin: item.priceMin,
+        priceMax: item.priceMax,
+        currency: item.currency,
+        category: item.category,
+        tags: item.tags,
+        images: item.images,
+        customizationAvailable: item.customizationAvailable,
+        leadTimeDays: item.leadTimeDays,
+        deliveryNotes: item.deliveryNotes,
+    };
+}
+
 export default function Home() {
     const prefersReducedMotion = useReducedMotion();
-    const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-    const [quickViewProduct, setQuickViewProduct] = React.useState<{
-        id: string;
-        name: string;
-        description: string;
-        price: number;
-        image: string | null;
-        occasion: string;
-    } | null>(null);
+    const [quickViewProduct, setQuickViewProduct] = React.useState<ReturnType<typeof toProductCardItem> | null>(null);
 
-    // Fetch dynamic products from Convex
-    const products = useQuery(api.products.list, {});
-    const isLoadingProducts = products === undefined;
+    // Fetch dynamic data from Convex
+    const featuredItems = useQuery(api.catalog.getFeatured, { limit: 4 });
+    const settings = useQuery(api.settings.get, {});
 
-    // Get 4 featured products for the homepage
-    const featuredProducts = products?.slice(0, 4) || [];
+    const isLoadingProducts = featuredItems === undefined;
+
+    // Default values from settings or fallbacks
+    const heroHeadline = settings?.heroHeadline || "Emotions in Full Bloom";
+    const heroSubheadline = settings?.heroSubheadline || "Hand-crafted arrangements that speak the language of the heart. Contact us to order.";
+    const trustBadges = settings?.trustBadges || [
+        { icon: "Sparkles", title: "Freshness Guaranteed", description: "Sourced directly from local growers" },
+        { icon: "Truck", title: "Same Day Delivery", description: "Order by 2PM for immediate delivery" },
+        { icon: "Shield", title: "Artist Arrangements", description: "Hand-crafted by award-winning designers" },
+    ];
+
+    const getIcon = (iconName: string) => {
+        switch (iconName) {
+            case "Sparkles": return Sparkles;
+            case "Truck": return Truck;
+            case "Shield": return Shield;
+            default: return Sparkles;
+        }
+    };
+
+    // WhatsApp link
+    const whatsappMessage = encodeURIComponent("Hi! I'd like to inquire about your floral arrangements.");
+    const whatsappLink = `https://wa.me/${settings?.whatsappNumber || "919876543210"}?text=${whatsappMessage}`;
 
     return (
         <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -176,16 +224,18 @@ export default function Home() {
                             Est. 2024 — Artisanal Flower Boutique
                         </motion.span>
 
-                        {/* Headline with staggered words */}
+                        {/* Headline */}
                         <motion.h1
                             initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                             className="mb-8 font-serif text-5xl font-bold leading-[1.1] text-white md:text-7xl lg:text-8xl"
                         >
-                            Emotions in
+                            {heroHeadline.split(" ").slice(0, -2).join(" ")}
                             <br />
-                            <span className="italic text-primary">Full Bloom</span>
+                            <span className="italic text-primary">
+                                {heroHeadline.split(" ").slice(-2).join(" ")}
+                            </span>
                         </motion.h1>
 
                         {/* Subheadline */}
@@ -195,48 +245,49 @@ export default function Home() {
                             transition={{ delay: 0.6, duration: 0.6 }}
                             className="mx-auto mb-10 max-w-2xl text-lg text-white/80 md:text-xl leading-relaxed"
                         >
-                            Hand-crafted arrangements that speak the language of the heart.
-                            <br className="hidden sm:block" />
-                            Delivered fresh to your doorstep, same day.
+                            {heroSubheadline}
                         </motion.p>
 
-                        {/* CTA Buttons */}
+                        {/* Primary CTA Buttons */}
                         <motion.div
                             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.8, duration: 0.6 }}
-                            className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+                            className="mb-6 flex flex-col items-center justify-center gap-4 sm:flex-row"
                         >
+                            <Button size="lg" className="min-w-[200px] bg-green-600 hover:bg-green-500" asChild>
+                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                                    <MessageCircle className="mr-2 h-5 w-5" />
+                                    WhatsApp to Order
+                                </a>
+                            </Button>
                             <Button size="lg" variant="premium" asChild className="min-w-[200px]">
-                                <Link href="/products">
-                                    Shop Collections
+                                <Link href="/contact">
+                                    <Mail className="mr-2 h-4 w-4" />
+                                    Get a Quote
+                                </Link>
+                            </Button>
+                        </motion.div>
+
+                        {/* Secondary CTA Buttons */}
+                        <motion.div
+                            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.9, duration: 0.6 }}
+                            className="mb-12 flex flex-col items-center justify-center gap-3 sm:flex-row"
+                        >
+                            <Button size="lg" variant="glass" className="text-white" asChild>
+                                <a href={`tel:${settings?.phoneNumber || "+919876543210"}`}>
+                                    <Phone className="mr-2 h-4 w-4" />
+                                    Call Now
+                                </a>
+                            </Button>
+                            <Button size="lg" variant="glass" className="text-white" asChild>
+                                <Link href="/catalog">
+                                    Browse Catalog
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </Button>
-                            {!authLoading && (
-                                isAuthenticated && user ? (
-                                    <Button
-                                        size="lg"
-                                        variant="glass"
-                                        className="min-w-[200px] text-white"
-                                        asChild
-                                    >
-                                        <Link href="/profile">
-                                            <User className="mr-2 h-4 w-4" />
-                                            My Account
-                                        </Link>
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        size="lg"
-                                        variant="glass"
-                                        className="min-w-[200px] text-white"
-                                        asChild
-                                    >
-                                        <Link href="/sign-up">Join Our Community</Link>
-                                    </Button>
-                                )
-                            )}
                         </motion.div>
 
                         {/* Occasion Chips */}
@@ -248,19 +299,17 @@ export default function Home() {
                         >
                             {occasions.map((occasion, index) => (
                                 <motion.div
-                                    key={occasion}
+                                    key={occasion.name}
                                     initial={prefersReducedMotion ? {} : { opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: 1 + index * 0.05, duration: 0.4 }}
                                 >
-                                    <Link
-                                        href={`/products?category=${occasion.toLowerCase().replace(" ", "-")}`}
-                                    >
+                                    <Link href={`/catalog?category=${occasion.category}`}>
                                         <Badge
                                             variant="glass"
                                             className="cursor-pointer px-4 py-1.5 text-white/90 transition-all hover:bg-white/20"
                                         >
-                                            {occasion}
+                                            {occasion.name}
                                         </Badge>
                                     </Link>
                                 </motion.div>
@@ -306,7 +355,7 @@ export default function Home() {
                         {collections.map((item, i) => (
                             <ScrollReveal key={i} delay={i * 0.15}>
                                 <Link
-                                    href={`/products?category=${item.title.toLowerCase()}`}
+                                    href={`/catalog?category=${item.category}`}
                                     className="group relative block h-[500px] overflow-hidden rounded-3xl"
                                 >
                                     <Image
@@ -317,13 +366,14 @@ export default function Home() {
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
                                     <div className="absolute bottom-0 left-0 p-8 text-white">
-                                        <Badge variant="glass" className="mb-3 text-white/80">
-                                            {item.count}
-                                        </Badge>
                                         <h3 className="font-serif text-3xl font-bold">{item.title}</h3>
                                         <p className="mt-2 text-white/70 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                             {item.description}
                                         </p>
+                                        <Button variant="glass" size="sm" className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            View Collection
+                                            <ArrowRight className="ml-2 h-4 w-4" />
+                                        </Button>
                                     </div>
                                 </Link>
                             </ScrollReveal>
@@ -332,23 +382,23 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Signature Series - Dynamic Products */}
+            {/* Featured Arrangements */}
             <section className="bg-muted/30 py-24 lg:py-32">
                 <div className="container mx-auto px-6">
                     <ScrollReveal>
                         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
                             <div className="max-w-2xl">
                                 <h2 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
-                                    Signature Series
+                                    Featured Arrangements
                                 </h2>
                                 <div className="mb-4 h-1 w-24 rounded-full bg-gradient-to-r from-primary/50 via-primary to-primary/50" />
                                 <p className="text-muted-foreground">
-                                    Our most popular handcrafted arrangements, delivered same-day.
+                                    Our most popular handcrafted bouquets. Contact us to order.
                                 </p>
                             </div>
                             <Button variant="outline" asChild className="hidden md:flex">
-                                <Link href="/products">
-                                    View All Blooms
+                                <Link href="/catalog">
+                                    View Full Catalog
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
                             </Button>
@@ -365,17 +415,10 @@ export default function Home() {
                                 </div>
                             ))
                         ) : (
-                            featuredProducts.map((product, i) => (
-                                <ScrollReveal key={product._id} delay={i * 0.1}>
+                            featuredItems?.map((item, i) => (
+                                <ScrollReveal key={item._id} delay={i * 0.1}>
                                     <ProductCard
-                                        product={{
-                                            id: product._id,
-                                            name: product.name,
-                                            description: product.description,
-                                            price: product.price,
-                                            image: product.image || null,
-                                            occasion: product.occasion,
-                                        }}
+                                        product={toProductCardItem(item)}
                                         onQuickView={(p) => setQuickViewProduct(p)}
                                     />
                                 </ScrollReveal>
@@ -385,8 +428,8 @@ export default function Home() {
 
                     <div className="mt-12 flex justify-center md:hidden">
                         <Button variant="outline" asChild className="w-full">
-                            <Link href="/products">
-                                View Full Collection
+                            <Link href="/catalog">
+                                View Full Catalog
                                 <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </Button>
@@ -394,25 +437,28 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Value Props */}
+            {/* Value Props / Trust Badges */}
             <section className="py-24" id="about">
                 <div className="container mx-auto px-6">
                     <div className="grid gap-8 md:grid-cols-3">
-                        {valueProps.map((prop, i) => (
-                            <ScrollReveal key={i} delay={i * 0.1}>
-                                <div className="group rounded-3xl border bg-card p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-bloom">
-                                    <motion.div
-                                        whileHover={prefersReducedMotion ? {} : { scale: 1.1, rotate: 5 }}
-                                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                                        className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
-                                    >
-                                        <prop.icon className="h-7 w-7" />
-                                    </motion.div>
-                                    <h3 className="mb-3 font-serif text-xl font-bold">{prop.title}</h3>
-                                    <p className="text-muted-foreground leading-relaxed">{prop.description}</p>
-                                </div>
-                            </ScrollReveal>
-                        ))}
+                        {trustBadges.map((prop, i) => {
+                            const Icon = getIcon(prop.icon);
+                            return (
+                                <ScrollReveal key={i} delay={i * 0.1}>
+                                    <div className="group rounded-3xl border bg-card p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-bloom">
+                                        <motion.div
+                                            whileHover={prefersReducedMotion ? {} : { scale: 1.1, rotate: 5 }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                                            className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
+                                        >
+                                            <Icon className="h-7 w-7" />
+                                        </motion.div>
+                                        <h3 className="mb-3 font-serif text-xl font-bold">{prop.title}</h3>
+                                        <p className="text-muted-foreground leading-relaxed">{prop.description}</p>
+                                    </div>
+                                </ScrollReveal>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -457,24 +503,36 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Newsletter */}
+            {/* Contact CTA Section */}
             <section className="py-24">
                 <div className="container mx-auto px-6">
                     <ScrollReveal>
-                        <div className="mx-auto max-w-2xl rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10 p-12 text-center border border-primary/10">
-                            <h2 className="mb-4 font-serif text-3xl font-bold">Stay in Bloom</h2>
-                            <p className="mb-8 text-muted-foreground">
-                                Subscribe to our newsletter for exclusive offers, care tips, and
-                                flower of the month features.
+                        <div className="mx-auto max-w-3xl rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10 p-12 text-center border border-primary/10">
+                            <h2 className="mb-4 font-serif text-3xl font-bold">Ready to Order?</h2>
+                            <p className="mb-8 text-muted-foreground max-w-xl mx-auto">
+                                Contact us via WhatsApp, phone, or email to discuss your floral needs.
+                                We&apos;ll help you create the perfect arrangement.
                             </p>
-                            <form className="flex flex-col gap-4 sm:flex-row">
-                                <Input
-                                    type="email"
-                                    placeholder="Enter your email address"
-                                    className="flex-1"
-                                />
-                                <Button type="submit">Subscribe</Button>
-                            </form>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <Button size="lg" className="bg-green-600 hover:bg-green-500" asChild>
+                                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                                        <MessageCircle className="mr-2 h-5 w-5" />
+                                        WhatsApp Us
+                                    </a>
+                                </Button>
+                                <Button size="lg" variant="outline" asChild>
+                                    <a href={`tel:${settings?.phoneNumber || "+919876543210"}`}>
+                                        <Phone className="mr-2 h-4 w-4" />
+                                        Call Now
+                                    </a>
+                                </Button>
+                                <Button size="lg" variant="outline" asChild>
+                                    <Link href="/contact">
+                                        <Mail className="mr-2 h-4 w-4" />
+                                        Email Us
+                                    </Link>
+                                </Button>
+                            </div>
                         </div>
                     </ScrollReveal>
                 </div>

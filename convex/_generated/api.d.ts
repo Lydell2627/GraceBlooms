@@ -8,12 +8,18 @@
  * @module
  */
 
+import type * as ai from "../ai.js";
 import type * as auth from "../auth.js";
+import type * as catalog from "../catalog.js";
+import type * as contact from "../contact.js";
+import type * as faq from "../faq.js";
+import type * as gemini from "../gemini.js";
 import type * as googleAuth from "../googleAuth.js";
 import type * as http from "../http.js";
-import type * as messages from "../messages.js";
-import type * as orders from "../orders.js";
-import type * as products from "../products.js";
+import type * as inquiries from "../inquiries.js";
+import type * as seed from "../seed.js";
+import type * as services from "../services.js";
+import type * as settings from "../settings.js";
 import type * as users from "../users.js";
 
 import type {
@@ -23,12 +29,18 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  ai: typeof ai;
   auth: typeof auth;
+  catalog: typeof catalog;
+  contact: typeof contact;
+  faq: typeof faq;
+  gemini: typeof gemini;
   googleAuth: typeof googleAuth;
   http: typeof http;
-  messages: typeof messages;
-  orders: typeof orders;
-  products: typeof products;
+  inquiries: typeof inquiries;
+  seed: typeof seed;
+  services: typeof services;
+  settings: typeof settings;
   users: typeof users;
 }>;
 
