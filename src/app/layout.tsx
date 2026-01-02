@@ -21,6 +21,12 @@ export const metadata = {
     title: "Grace Blooms | Artisanal Flower Boutique",
     description: "Exquisite floral arrangements and botanical wonders. Contact us via WhatsApp, phone, or email to order.",
     icons: [{ rel: "icon", url: "/favicon.ico" }],
+    viewport: {
+        width: "device-width",
+        initialScale: 1,
+        maximumScale: 1,
+        viewportFit: "cover",
+    },
 };
 
 export default function RootLayout({
