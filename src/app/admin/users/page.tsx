@@ -88,25 +88,95 @@ export default function AdminUsersPage() {
     const adminCount = users?.filter((u) => u.role === "ADMIN").length ?? 0;
     const customerCount = users?.filter((u) => u.role === "CUSTOMER").length ?? 0;
 
+    // User card component for mobile
+    const UserCard = ({ user }: { user: typeof filteredUsers[0] }) => (
+        <div className="p-4 rounded-xl bg-muted/30 border space-y-3">
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted font-medium text-sm">
+                        {user.name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || "?"}
+                    </div>
+                    <div className="min-w-0">
+                        <p className="font-medium text-sm truncate">{user.name || "Unnamed User"}</p>
+                        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                </div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            disabled={isUpdating === user._id}
+                        >
+                            {isUpdating === user._id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <MoreHorizontal className="h-4 w-4" />
+                            )}
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                            onClick={() =>
+                                handleRoleChange(
+                                    user._id as Id<"users">,
+                                    user.role === "ADMIN" ? "CUSTOMER" : "ADMIN"
+                                )
+                            }
+                        >
+                            {user.role === "ADMIN" ? (
+                                <>
+                                    <Shield className="mr-2 h-4 w-4" />
+                                    Demote to Customer
+                                </>
+                            ) : (
+                                <>
+                                    <ShieldCheck className="mr-2 h-4 w-4" />
+                                    Promote to Admin
+                                </>
+                            )}
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+            <div className="flex items-center justify-between">
+                <Badge
+                    variant={user.role === "ADMIN" ? "default" : "secondary"}
+                    className="gap-1"
+                >
+                    {user.role === "ADMIN" ? (
+                        <ShieldCheck className="h-3 w-3" />
+                    ) : (
+                        <Shield className="h-3 w-3" />
+                    )}
+                    {user.role?.toLowerCase() ?? "customer"}
+                </Badge>
+                <span className="text-xs text-muted-foreground">
+                    Joined {formatDate(user.createdAt)}
+                </span>
+            </div>
+        </div>
+    );
+
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold font-serif">Users</h1>
-                <p className="text-muted-foreground">Manage user accounts and permissions</p>
+                <h1 className="text-xl sm:text-2xl font-bold font-serif">Users</h1>
+                <p className="text-sm text-muted-foreground">Manage user accounts and permissions</p>
             </div>
 
-            {/* Stats */}
-            <div className="grid gap-4 md:grid-cols-3">
+            {/* Stats - Responsive grid */}
+            <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
                 <Card className="border-none shadow-sm">
-                    <CardContent className="pt-6">
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                                <Users className="h-6 w-6 text-primary" />
+                    <CardContent className="pt-4 sm:pt-6">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-primary/10">
+                                <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Total Users</p>
-                                <p className="text-2xl font-bold">{users?.length ?? 0}</p>
+                                <p className="text-xs sm:text-sm text-muted-foreground">Total Users</p>
+                                <p className="text-xl sm:text-2xl font-bold">{users?.length ?? 0}</p>
                             </div>
                         </div>
                     </CardContent>
@@ -115,14 +185,14 @@ export default function AdminUsersPage() {
                     className={`border-none shadow-sm cursor-pointer ${filterRole === "ADMIN" ? "ring-2 ring-primary" : ""}`}
                     onClick={() => setFilterRole(filterRole === "ADMIN" ? "ALL" : "ADMIN")}
                 >
-                    <CardContent className="pt-6">
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blush/10">
-                                <ShieldCheck className="h-6 w-6 text-blush" />
+                    <CardContent className="pt-4 sm:pt-6">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-blush/10">
+                                <ShieldCheck className="h-5 w-5 sm:h-6 sm:w-6 text-blush" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Admins</p>
-                                <p className="text-2xl font-bold">{adminCount}</p>
+                                <p className="text-xs sm:text-sm text-muted-foreground">Admins</p>
+                                <p className="text-xl sm:text-2xl font-bold">{adminCount}</p>
                             </div>
                         </div>
                     </CardContent>
@@ -131,14 +201,14 @@ export default function AdminUsersPage() {
                     className={`border-none shadow-sm cursor-pointer ${filterRole === "CUSTOMER" ? "ring-2 ring-primary" : ""}`}
                     onClick={() => setFilterRole(filterRole === "CUSTOMER" ? "ALL" : "CUSTOMER")}
                 >
-                    <CardContent className="pt-6">
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-sage/10">
-                                <Users className="h-6 w-6 text-sage" />
+                    <CardContent className="pt-4 sm:pt-6">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-sage/10">
+                                <Users className="h-5 w-5 sm:h-6 sm:w-6 text-sage" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Customers</p>
-                                <p className="text-2xl font-bold">{customerCount}</p>
+                                <p className="text-xs sm:text-sm text-muted-foreground">Customers</p>
+                                <p className="text-xl sm:text-2xl font-bold">{customerCount}</p>
                             </div>
                         </div>
                     </CardContent>
@@ -147,8 +217,8 @@ export default function AdminUsersPage() {
 
             {/* Filters */}
             <Card className="border-none shadow-sm">
-                <CardContent className="pt-6">
-                    <div className="flex flex-col gap-4 sm:flex-row">
+                <CardContent className="pt-4 sm:pt-6">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                         <div className="relative flex-1">
                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
@@ -175,11 +245,11 @@ export default function AdminUsersPage() {
                 </CardContent>
             </Card>
 
-            {/* Users Table */}
+            {/* Users List */}
             <Card className="border-none shadow-sm">
                 <CardContent className="p-0">
                     {isLoading ? (
-                        <div className="p-6 space-y-4">
+                        <div className="p-4 sm:p-6 space-y-4">
                             {[1, 2, 3, 4, 5].map((i) => (
                                 <div key={i} className="flex items-center gap-4">
                                     <Skeleton className="h-10 w-10 rounded-full" />
@@ -192,8 +262,8 @@ export default function AdminUsersPage() {
                             ))}
                         </div>
                     ) : filteredUsers.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <Users className="h-12 w-12 text-muted-foreground mb-4" />
+                        <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center px-4">
+                            <Users className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mb-4" />
                             <h3 className="font-semibold">No users found</h3>
                             <p className="text-muted-foreground text-sm">
                                 {search || filterRole !== "ALL"
@@ -202,94 +272,106 @@ export default function AdminUsersPage() {
                             </p>
                         </div>
                     ) : (
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>User</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Role</TableHead>
-                                    <TableHead>Joined</TableHead>
-                                    <TableHead className="w-10"></TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
+                        <>
+                            {/* Mobile View - Cards */}
+                            <div className="block lg:hidden p-4 space-y-3">
                                 {filteredUsers.map((user) => (
-                                    <TableRow key={user._id}>
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted font-medium">
-                                                    {user.name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || "?"}
-                                                </div>
-                                                <span className="font-medium">
-                                                    {user.name || "Unnamed User"}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center gap-2 text-muted-foreground">
-                                                <Mail className="h-4 w-4" />
-                                                {user.email}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                variant={user.role === "ADMIN" ? "default" : "secondary"}
-                                                className="gap-1"
-                                            >
-                                                {user.role === "ADMIN" ? (
-                                                    <ShieldCheck className="h-3 w-3" />
-                                                ) : (
-                                                    <Shield className="h-3 w-3" />
-                                                )}
-                                                {user.role?.toLowerCase() ?? "customer"}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-sm text-muted-foreground">
-                                            {formatDate(user.createdAt)}
-                                        </TableCell>
-                                        <TableCell>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        disabled={isUpdating === user._id}
-                                                    >
-                                                        {isUpdating === user._id ? (
-                                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                                        ) : (
-                                                            <MoreHorizontal className="h-4 w-4" />
-                                                        )}
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem
-                                                        onClick={() =>
-                                                            handleRoleChange(
-                                                                user._id as Id<"users">,
-                                                                user.role === "ADMIN" ? "CUSTOMER" : "ADMIN"
-                                                            )
-                                                        }
+                                    <UserCard key={user._id} user={user} />
+                                ))}
+                            </div>
+
+                            {/* Desktop View - Table */}
+                            <div className="hidden lg:block">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>User</TableHead>
+                                            <TableHead>Email</TableHead>
+                                            <TableHead>Role</TableHead>
+                                            <TableHead>Joined</TableHead>
+                                            <TableHead className="w-10"></TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {filteredUsers.map((user) => (
+                                            <TableRow key={user._id}>
+                                                <TableCell>
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted font-medium">
+                                                            {user.name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase() || "?"}
+                                                        </div>
+                                                        <span className="font-medium">
+                                                            {user.name || "Unnamed User"}
+                                                        </span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex items-center gap-2 text-muted-foreground">
+                                                        <Mail className="h-4 w-4" />
+                                                        {user.email}
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge
+                                                        variant={user.role === "ADMIN" ? "default" : "secondary"}
+                                                        className="gap-1"
                                                     >
                                                         {user.role === "ADMIN" ? (
-                                                            <>
-                                                                <Shield className="mr-2 h-4 w-4" />
-                                                                Demote to Customer
-                                                            </>
+                                                            <ShieldCheck className="h-3 w-3" />
                                                         ) : (
-                                                            <>
-                                                                <ShieldCheck className="mr-2 h-4 w-4" />
-                                                                Promote to Admin
-                                                            </>
+                                                            <Shield className="h-3 w-3" />
                                                         )}
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                                        {user.role?.toLowerCase() ?? "customer"}
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell className="text-sm text-muted-foreground">
+                                                    {formatDate(user.createdAt)}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                disabled={isUpdating === user._id}
+                                                            >
+                                                                {isUpdating === user._id ? (
+                                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                                ) : (
+                                                                    <MoreHorizontal className="h-4 w-4" />
+                                                                )}
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuItem
+                                                                onClick={() =>
+                                                                    handleRoleChange(
+                                                                        user._id as Id<"users">,
+                                                                        user.role === "ADMIN" ? "CUSTOMER" : "ADMIN"
+                                                                    )
+                                                                }
+                                                            >
+                                                                {user.role === "ADMIN" ? (
+                                                                    <>
+                                                                        <Shield className="mr-2 h-4 w-4" />
+                                                                        Demote to Customer
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <ShieldCheck className="mr-2 h-4 w-4" />
+                                                                        Promote to Admin
+                                                                    </>
+                                                                )}
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        </>
                     )}
                 </CardContent>
             </Card>
