@@ -38,7 +38,7 @@ export function CatalogItemPage({ slug }: CatalogItemPageProps) {
         return (
             <main className="min-h-screen bg-background">
                 <Navbar />
-                <div className="container mx-auto px-6 pt-32">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-32">
                     <div className="grid gap-12 lg:grid-cols-2">
                         <div className="aspect-square rounded-3xl bg-muted animate-pulse" />
                         <div className="space-y-4">
@@ -56,7 +56,7 @@ export function CatalogItemPage({ slug }: CatalogItemPageProps) {
         return (
             <main className="min-h-screen bg-background">
                 <Navbar />
-                <div className="container mx-auto px-6 pt-32 text-center">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 lg:pt-32 text-center">
                     <div className="mb-4 text-6xl">🌸</div>
                     <h1 className="font-serif text-3xl font-bold mb-4">Item Not Found</h1>
                     <p className="text-muted-foreground mb-6">
@@ -105,7 +105,7 @@ export function CatalogItemPage({ slug }: CatalogItemPageProps) {
         <main className="min-h-screen bg-background">
             <Navbar />
 
-            <div className="container mx-auto px-6 pt-28 pb-16">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-12 sm:pb-16">
                 {/* Breadcrumb */}
                 <motion.div
                     initial={prefersReducedMotion ? {} : { opacity: 0, y: -10 }}
@@ -184,8 +184,8 @@ export function CatalogItemPage({ slug }: CatalogItemPageProps) {
                                         key={idx}
                                         onClick={() => setCurrentImageIndex(idx)}
                                         className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${idx === currentImageIndex
-                                                ? "border-primary ring-2 ring-primary/20"
-                                                : "border-transparent opacity-70 hover:opacity-100"
+                                            ? "border-primary ring-2 ring-primary/20"
+                                            : "border-transparent opacity-70 hover:opacity-100"
                                             }`}
                                     >
                                         <Image src={img} alt="" fill className="object-cover" />
@@ -302,7 +302,7 @@ export function CatalogItemPage({ slug }: CatalogItemPageProps) {
             {/* Related Items */}
             {relatedItems && relatedItems.length > 0 && (
                 <section className="py-16 bg-muted/30">
-                    <div className="container mx-auto px-6">
+                    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                         <ScrollReveal>
                             <h2 className="font-serif text-3xl font-bold mb-8">
                                 You May Also Like

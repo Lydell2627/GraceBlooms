@@ -491,6 +491,66 @@
         border-radius: 3rem;
     }
 
+    /* === RESPONSIVE CONTAINER UTILITIES === */
+    /* Mobile-first container with consistent spacing */
+    .container-responsive {
+        @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+        max-width: 1400px;
+    }
+
+    /* Section padding - mobile optimized */
+    .section-padding {
+        @apply py-12 sm:py-16 lg:py-24;
+    }
+
+    .section-padding-sm {
+        @apply py-8 sm:py-12 lg:py-16;
+    }
+
+    .section-padding-lg {
+        @apply py-16 sm:py-24 lg:py-32;
+    }
+
+    /* Mobile-optimized margin top for fixed navbar */
+    .pt-navbar {
+        @apply pt-20 sm:pt-24 lg:pt-28;
+    }
+
+    /* Mobile text sizes that scale well */
+    .text-hero {
+        @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
+    }
+
+    .text-section-title {
+        @apply text-2xl sm:text-3xl lg:text-4xl;
+    }
+
+    .text-card-title {
+        @apply text-lg sm:text-xl;
+    }
+
+    /* Grid utilities for mobile responsiveness */
+    .grid-responsive-2 {
+        @apply grid grid-cols-1 sm:grid-cols-2;
+    }
+
+    .grid-responsive-3 {
+        @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+    }
+
+    .grid-responsive-4 {
+        @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+    }
+
+    /* Gap utilities that scale with screen size */
+    .gap-responsive {
+        @apply gap-4 sm:gap-6 lg:gap-8;
+    }
+
+    .gap-responsive-sm {
+        @apply gap-3 sm:gap-4 lg:gap-6;
+    }
+
     /* Text balance for headings */
     .text-balance {
         text-wrap: balance;

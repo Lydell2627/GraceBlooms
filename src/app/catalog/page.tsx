@@ -216,24 +216,24 @@ export default function CatalogPage() {
             <Navbar />
 
             {/* Hero */}
-            <section className="relative pt-32 pb-16 bg-muted/30">
-                <div className="container mx-auto px-6">
+            <section className="relative pt-24 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 bg-muted/30">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                         className="text-center max-w-3xl mx-auto"
                     >
-                        <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4">
+                        <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
                             Our Catalog
                         </h1>
-                        <p className="text-muted-foreground text-lg mb-8">
+                        <p className="text-muted-foreground text-base sm:text-lg mb-6 sm:mb-8 px-2">
                             Browse our handcrafted arrangements and chat with our AI assistant for personalized help.
                         </p>
 
                         {/* Search */}
-                        <div className="relative max-w-md mx-auto">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <div className="relative max-w-md mx-auto px-2">
+                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                             <Input
                                 type="search"
                                 placeholder="Search arrangements..."
@@ -247,8 +247,8 @@ export default function CatalogPage() {
             </section>
 
             {/* Catalog */}
-            <section className="py-12">
-                <div className="container mx-auto px-6">
+            <section className="py-8 sm:py-12">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col lg:flex-row gap-8">
                         {/* Desktop Sidebar Filters */}
                         <aside className="hidden lg:block w-64 shrink-0">

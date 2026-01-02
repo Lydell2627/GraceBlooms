@@ -65,7 +65,7 @@ export default function AboutPage() {
                     <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
                 </div>
 
-                <div className="container relative z-10 mx-auto px-6">
+                <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -95,7 +95,7 @@ export default function AboutPage() {
 
             {/* Our Story */}
             <section className="py-20">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid gap-12 lg:grid-cols-2 items-center">
                         <ScrollReveal>
                             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden">
@@ -139,7 +139,7 @@ export default function AboutPage() {
 
             {/* Our Values */}
             <section className="py-20 bg-muted/30">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal>
                         <div className="text-center max-w-2xl mx-auto mb-16">
                             <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">
@@ -178,7 +178,7 @@ export default function AboutPage() {
 
             {/* Journey / Timeline */}
             <section className="py-20">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal>
                         <div className="text-center max-w-2xl mx-auto mb-16">
                             <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">
@@ -214,7 +214,7 @@ export default function AboutPage() {
 
             {/* CTA Section */}
             <section className="py-20 bg-foreground text-background">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal>
                         <div className="text-center max-w-3xl mx-auto">
                             <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">

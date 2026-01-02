@@ -106,7 +106,7 @@ export default function ContactPage() {
 
             {/* Hero */}
             <section className="relative pt-32 pb-16 bg-gradient-to-b from-muted/50 to-background">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -126,7 +126,7 @@ export default function ContactPage() {
 
             {/* Contact Methods */}
             <section className="py-12">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid gap-6 md:grid-cols-3">
                         {contactMethods.map((method, i) => {
                             const Icon = method.icon;
@@ -155,7 +155,7 @@ export default function ContactPage() {
 
             {/* Contact Form & Info */}
             <section className="py-16">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid gap-12 lg:grid-cols-2">
                         {/* Form */}
                         <ScrollReveal>

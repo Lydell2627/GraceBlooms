@@ -133,7 +133,7 @@ export default function AdminSettingsPage() {
         return (
             <main className="min-h-screen bg-background">
 
-                <div className="container mx-auto px-6 pt-28 pb-16">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
                     <div className="max-w-2xl mx-auto space-y-6">
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="space-y-2">
@@ -151,7 +151,7 @@ export default function AdminSettingsPage() {
         <main className="min-h-screen bg-background">
 
 
-            <div className="container mx-auto px-6 pt-28 pb-16">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
                 <div className="max-w-2xl mx-auto">
                     {/* Header */}
                     <div className="mb-8">

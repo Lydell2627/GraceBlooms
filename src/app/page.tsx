@@ -207,7 +207,7 @@ export default function Home() {
                 </div>
 
                 {/* Content */}
-                <div className="container relative z-10 mx-auto px-6 text-center">
+                <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <motion.div
                         initial={prefersReducedMotion ? {} : { opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -338,7 +338,7 @@ export default function Home() {
 
             {/* Featured Collections */}
             <section className="py-24 lg:py-32">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal>
                         <div className="mb-16 text-center">
                             <h2 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
@@ -384,7 +384,7 @@ export default function Home() {
 
             {/* Featured Arrangements */}
             <section className="bg-muted/30 py-24 lg:py-32">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal>
                         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
                             <div className="max-w-2xl">
@@ -439,7 +439,7 @@ export default function Home() {
 
             {/* Value Props / Trust Badges */}
             <section className="py-24" id="about">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid gap-8 md:grid-cols-3">
                         {trustBadges.map((prop, i) => {
                             const Icon = getIcon(prop.icon);
@@ -465,7 +465,7 @@ export default function Home() {
 
             {/* Testimonials */}
             <section className="bg-foreground py-24 text-background">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal>
                         <div className="mb-16 text-center">
                             <h2 className="mb-4 font-serif text-4xl font-bold md:text-5xl">
@@ -505,7 +505,7 @@ export default function Home() {
 
             {/* Contact CTA Section */}
             <section className="py-24">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal>
                         <div className="mx-auto max-w-3xl rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10 p-12 text-center border border-primary/10">
                             <h2 className="mb-4 font-serif text-3xl font-bold">Ready to Order?</h2>

@@ -35,7 +35,7 @@ export default function ServicesPage() {
 
             {/* Hero */}
             <section className="relative pt-32 pb-20 bg-gradient-to-b from-muted/50 to-background">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -71,7 +71,7 @@ export default function ServicesPage() {
 
             {/* Services Grid */}
             <section className="py-20">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     {isLoading ? (
                         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                             {Array.from({ length: 5 }).map((_, i) => (
@@ -145,7 +145,7 @@ export default function ServicesPage() {
 
             {/* CTA Section */}
             <section className="py-20 bg-muted/30">
-                <div className="container mx-auto px-6">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <ScrollReveal>
                         <div className="mx-auto max-w-3xl rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10 p-12 text-center border border-primary/10">
                             <h2 className="mb-4 font-serif text-3xl font-bold">Have Something Special in Mind?</h2>

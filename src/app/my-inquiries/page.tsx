@@ -94,7 +94,7 @@ export default function MyInquiriesPage() {
         return (
             <main className="min-h-screen bg-background">
                 <Navbar />
-                <div className="container mx-auto px-6 pt-28 pb-16">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
                     <div className="flex items-center justify-center py-20">
                         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
                     </div>
@@ -109,7 +109,7 @@ export default function MyInquiriesPage() {
         return (
             <main className="min-h-screen bg-background">
                 <Navbar />
-                <div className="container mx-auto px-6 pt-28 pb-16">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
                     <div className="flex flex-col items-center justify-center py-20 text-center">
                         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted mb-6">
                             <MessageSquare className="h-10 w-10 text-muted-foreground" />
@@ -132,7 +132,7 @@ export default function MyInquiriesPage() {
         <main className="min-h-screen bg-background">
             <Navbar />
 
-            <div className="container mx-auto px-6 pt-28 pb-16">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
                 {/* Header */}
                 <ScrollReveal>
                     <div className="mb-8">
