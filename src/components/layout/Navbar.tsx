@@ -302,11 +302,11 @@ export function Navbar() {
                                 <span className="sr-only">Menu</span>
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="right" className="w-80 border-l-0 bg-background/95 backdrop-blur-xl">
+                        <SheetContent side="right" className="w-80 border-l-0 bg-background/95 backdrop-blur-xl overflow-y-auto">
                             <SheetHeader>
                                 <SheetTitle className="font-serif text-left">Menu</SheetTitle>
                             </SheetHeader>
-                            <nav className="mt-8 flex flex-col gap-2">
+                            <nav className="mt-6 flex flex-col gap-2 pb-8">
                                 {[
                                     { href: "/catalog", label: "Browse Catalog" },
                                     { href: "/catalog?category=wedding", label: "Wedding" },
