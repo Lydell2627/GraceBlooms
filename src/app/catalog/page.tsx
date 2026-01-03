@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { Search, SlidersHorizontal, X, MessageCircle, Phone, Mail } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "~/convex/_generated/api";
 import { Navbar } from "~/components/layout/Navbar";
@@ -29,7 +29,6 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "~/components/ui/sheet";
-import { ScrollReveal } from "~/components/ui/scroll-reveal";
 import { BloomingGrid } from "~/components/ui/BloomingGrid";
 
 interface CatalogItem {
@@ -140,9 +139,7 @@ export default function CatalogPage() {
 
     const hasActiveFilters = (category && category !== "all") || selectedTags.length > 0 || priceRange[0] > 0 || priceRange[1] < 25000;
 
-    // WhatsApp link
-    const whatsappMessage = encodeURIComponent("Hi! I'm browsing your catalog and would like some help.");
-    const whatsappLink = `https://wa.me/${settings?.whatsappNumber || "919876543210"}?text=${whatsappMessage}`;
+
 
     const FilterContent = () => (
         <div className="space-y-6">

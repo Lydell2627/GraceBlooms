@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import { cn } from "~/lib/utils";
 
 interface ThemeImageProps {
     lightSrc: string;
-    darkSrc: string;
+    darkSrc?: string;
     alt: string;
     priority?: boolean;
     className?: string;
@@ -14,6 +15,7 @@ interface ThemeImageProps {
     fill?: boolean;
     width?: number;
     height?: number;
+    quality?: number;
 }
 
 /**
@@ -22,8 +24,8 @@ interface ThemeImageProps {
  * Smart next/image wrapper optimized for 4K floral assets with theme-aware loading.
  * Features:
  * - Automatic theme-based source selection
- * - Smooth 0.6s cross-fade on theme transitions
- * - Performance-optimized with blur placeholders
+ * - Smooth cross-fade on theme transitions
+ * - Performance-optimized with Next.js Image
  * - 4K-ready size defaults
  */
 export function ThemeImage({
@@ -36,59 +38,70 @@ export function ThemeImage({
     fill = false,
     width,
     height,
+    quality = 90,
 }: ThemeImageProps) {
-    const { theme, resolvedTheme } = useTheme();
+    const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
-    const [imgOpacity, setImgOpacity] = useState(1);
 
     // Prevent hydration mismatch
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    // Smooth cross-fade on theme change
-    useEffect(() => {
-        if (!mounted) return;
-
-        setImgOpacity(0);
-        const timer = setTimeout(() => {
-            setImgOpacity(1);
-        }, 50);
-
-        return () => clearTimeout(timer);
-    }, [theme, resolvedTheme, mounted]);
-
-    // Use resolved theme to determine source
-    const currentTheme = resolvedTheme || theme;
-    const src = currentTheme === "dark" ? darkSrc : lightSrc;
-
     // Prevent flash during SSR
     if (!mounted) {
         return (
-            <div className={className} style={{ background: "var(--muted)" }} />
+            <div className={cn("bg-muted", className)} />
         );
     }
 
-    const imageProps = {
-        src,
-        alt,
-        priority,
-        sizes,
-        className: `${className} theme-image-transition`,
-        style: { opacity: imgOpacity },
-        placeholder: "blur" as const,
-        blurDataURL: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAB//2Q==",
-    };
+    const theme = resolvedTheme || "light";
 
     if (fill) {
-        return <Image {...imageProps} fill />;
+        return (
+            <div className="relative w-full h-full">
+                {lightSrc && (
+                    <Image
+                        src={lightSrc}
+                        alt={alt}
+                        fill
+                        priority={priority}
+                        sizes={sizes}
+                        quality={quality}
+                        className={cn(
+                            "object-cover transition-opacity duration-500",
+                            theme === "light" ? "opacity-100" : "opacity-0"
+                        )}
+                    />
+                )}
+                <Image
+                    src={darkSrc ?? lightSrc}
+                    alt={alt}
+                    fill
+                    priority={priority}
+                    sizes={sizes}
+                    quality={quality}
+                    className={cn(
+                        "object-cover transition-opacity duration-500",
+                        theme === "dark" ? "opacity-100" : "opacity-0"
+                    )}
+                />
+            </div>
+        );
     }
+
+    const src = theme === "dark" ? (darkSrc ?? lightSrc) : lightSrc;
 
     return (
         <Image
-            {...imageProps}
+            src={src}
+            alt={alt}
             width={width || 1920}
             height={height || 1080}
+            priority={priority}
+            sizes={sizes}
+            quality={quality}
+            className={cn("transition-opacity duration-500", className)}
         />
     );
 }
