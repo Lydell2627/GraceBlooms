@@ -34,6 +34,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { ThemeToggle } from "~/app/_components/ThemeToggle";
 import { cn } from "~/lib/utils";
+import { useScrollDirection } from "~/hooks/useScrollDirection";
 
 const collections: { title: string; href: string; description: string }[] = [
     {
@@ -70,18 +71,41 @@ const collections: { title: string; href: string; description: string }[] = [
 
 export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-    const [scrolled, setScrolled] = React.useState(false);
     const { user, isAuthenticated, isLoading } = useAuth();
     const prefersReducedMotion = useReducedMotion();
+    const scrollDirection = useScrollDirection();
+    const navRef = React.useRef<HTMLElement>(null);
 
-    // Scroll-aware navigation styling
+    // GSAP hide/show animation based on scroll direction
     React.useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
+        if (!navRef.current || prefersReducedMotion) return;
+
+        const animateNavbar = async () => {
+            try {
+                const gsap = (await import("gsap")).default;
+
+                if (scrollDirection === "down") {
+                    gsap.to(navRef.current, {
+                        y: -100,
+                        opacity: 0,
+                        duration: 0.4,
+                        ease: "power2.out",
+                    });
+                } else if (scrollDirection === "up") {
+                    gsap.to(navRef.current, {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.3,
+                        ease: "power2.inOut",
+                    });
+                }
+            } catch (error) {
+                console.warn("GSAP animation failed:", error);
+            }
         };
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+
+        animateNavbar();
+    }, [scrollDirection, prefersReducedMotion]);
 
     const handleSignOut = async () => {
         try {
@@ -94,22 +118,18 @@ export function Navbar() {
     };
 
     return (
-        <motion.nav
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        <nav
+            ref={navRef}
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-                scrolled
-                    ? "bg-background/70 backdrop-blur-xl border-b border-border/50 shadow-premium"
-                    : "bg-transparent border-b border-transparent"
+                "navbar-floating rounded-full transition-all duration-500 shadow-lg",
+                "dark:navbar-glass-dark navbar-glass-light"
             )}
         >
-            <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:h-20">
-                {/* Logo with hover animation */}
+            <div className="container mx-auto flex h-16 items-center justify-center px-6 lg:h-18 lg:px-8 relative">
+                {/* Logo with hover animation - positioned absolutely on left */}
                 <Link
                     href="/"
-                    className="group flex items-center gap-2 font-serif text-xl font-bold tracking-tight lg:text-2xl"
+                    className="group absolute left-6 lg:left-8 flex items-center gap-2 font-serif text-xl font-bold tracking-tight lg:text-2xl"
                 >
                     <motion.div
                         whileHover={prefersReducedMotion ? {} : { rotate: 12, scale: 1.1 }}
@@ -118,22 +138,19 @@ export function Navbar() {
                         <Flower2 className="h-6 w-6 text-primary transition-colors group-hover:text-primary/80" />
                     </motion.div>
                     <span className="flex items-center gap-1">
-                        <span className={cn(
-                            "transition-colors duration-300",
-                            scrolled ? "text-foreground" : "text-foreground"
-                        )}>
+                        <span className="transition-colors duration-300 text-foreground">
                             Grace{" "}
                         </span>
                         <span className="italic text-primary">Blooms</span>
                     </span>
                 </Link>
 
-                {/* Desktop Navigation */}
+                {/* Desktop Navigation - Centered */}
                 <div className="hidden lg:block">
                     <NavigationMenu>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="bg-transparent hover:bg-accent/50 data-[state=open]:bg-accent/50">
+                                <NavigationMenuTrigger className="navbar-link bg-transparent hover:bg-accent/50 data-[state=open]:bg-accent/50">
                                     Explore
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent>
@@ -169,7 +186,7 @@ export function Navbar() {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <NavigationMenuTrigger className="bg-transparent hover:bg-accent/50 data-[state=open]:bg-accent/50">
+                                <NavigationMenuTrigger className="navbar-link bg-transparent hover:bg-accent/50 data-[state=open]:bg-accent/50">
                                     Collections
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent>
@@ -187,14 +204,14 @@ export function Navbar() {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-accent/50")}>
+                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "navbar-link bg-transparent hover:bg-accent/50")}>
                                     <Link href="/catalog">
                                         Catalog
                                     </Link>
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-accent/50")}>
+                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "navbar-link bg-transparent hover:bg-accent/50")}>
                                     <Link href={isAuthenticated ? "/contact" : "/sign-in?redirect=/contact"}>
                                         Contact
                                     </Link>
@@ -204,8 +221,8 @@ export function Navbar() {
                     </NavigationMenu>
                 </div>
 
-                {/* Right Actions */}
-                <div className="flex items-center gap-1 lg:gap-2">
+                {/* Right Actions - positioned absolutely on right */}
+                <div className="flex items-center gap-1 lg:gap-2 absolute right-6 lg:right-8">
                     {/* Theme Toggle */}
                     <ThemeToggle />
 
@@ -287,7 +304,7 @@ export function Navbar() {
                                 <Button variant="ghost" asChild className="rounded-xl">
                                     <Link href="/sign-in">Sign In</Link>
                                 </Button>
-                                <Button asChild className="rounded-xl">
+                                <Button asChild className="rounded-full bg-[#A3B18A] hover:bg-[#8fa175] text-white">
                                     <Link href="/sign-up">Get Started</Link>
                                 </Button>
                             </>
@@ -434,7 +451,7 @@ export function Navbar() {
                     </Sheet>
                 </div>
             </div>
-        </motion.nav>
+        </nav>
     );
 }
 

@@ -41,7 +41,7 @@ export function Footer() {
     };
 
     return (
-        <footer className="relative border-t bg-card/50">
+        <footer className="relative border-t bg-card">
             {/* Decorative gradient */}
             <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 

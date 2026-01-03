@@ -53,7 +53,12 @@ export default {
 				},
 				// Extended botanical palette
 				sage: "hsl(var(--sage))",
-				blush: "hsl(var(--blush))",
+				terracotta: "hsl(var(--terracotta))",
+				"petal-pink": "hsl(var(--petal-pink))",
+				"coral-red": "hsl(var(--coral-red))",
+				"deep-moss": "hsl(var(--deep-moss))",
+				parchment: "hsl(var(--parchment))",
+				obsidian: "hsl(var(--obsidian))",
 				cream: "hsl(var(--cream))",
 				ink: "hsl(var(--ink))",
 				// Premium effect colors

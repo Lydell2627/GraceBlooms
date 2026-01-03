@@ -4,103 +4,110 @@
 
 @layer base {
     :root {
-        /* Noir Botanica 3.0 - Premium Light Mode */
-        /* Warm ivory base with refined elegance */
-        --background: 45 40% 98%;
-        /* #FDFCF8 warm ivory */
-        --foreground: 20 20% 10%;
-        /* #1A1714 deep ink */
+        /* Ephemeral Bloom - Light Theme */
+        /* Soft linen base with warm botanical elegance */
+        --background: 36 50% 98%;
+        /* #FDFBF7 soft linen */
+        --foreground: 24 15% 15%;
+        /* #2B2420 warm charcoal */
 
-        --card: 45 50% 99%;
-        /* Soft pearl white */
-        --card-foreground: 20 20% 10%;
+        --card: 40 60% 99%;
+        /* Warm pearl white */
+        --card-foreground: 24 15% 15%;
 
-        --popover: 45 50% 99%;
-        --popover-foreground: 20 20% 10%;
+        --popover: 40 60% 99%;
+        --popover-foreground: 24 15% 15%;
 
-        --primary: 350 45% 68%;
-        /* #D9A5AB dusty rose */
-        --primary-foreground: 20 20% 10%;
+        --primary: 24 40% 82%;
+        /* #E8D5C4 terracotta */
+        --primary-foreground: 24 25% 20%;
 
-        --secondary: 155 20% 45%;
-        /* #5B8A6B sage green */
+        --secondary: 94 20% 59%;
+        /* #A3B18A sage */
         --secondary-foreground: 0 0% 100%;
 
-        --muted: 40 25% 95%;
+        --muted: 36 35% 95%;
         /* Warm off-white */
-        --muted-foreground: 20 12% 50%;
+        --muted-foreground: 24 12% 45%;
 
-        --accent: 350 45% 68%;
-        --accent-foreground: 20 20% 10%;
+        --accent: 347 61% 83%;
+        /* #F4ACB7 petal pink */
+        --accent-foreground: 24 25% 20%;
 
         --destructive: 0 65% 55%;
         --destructive-foreground: 0 0% 100%;
 
-        --border: 40 20% 90%;
-        --input: 40 20% 90%;
-        --ring: 350 45% 68%;
+        --border: 36 25% 88%;
+        --input: 36 25% 88%;
+        --ring: 24 40% 82%;
         --radius: 1rem;
 
         /* Extended palette */
-        --sage: 155 20% 45%;
-        --blush: 350 45% 68%;
-        --cream: 45 40% 98%;
-        --ink: 20 20% 10%;
+        --sage: 94 20% 59%;
+        --terracotta: 24 40% 82%;
+        --petal-pink: 347 61% 83%;
+        --cream: 36 50% 98%;
+        --ink: 24 15% 15%;
 
         /* Premium effect tokens */
-        --glow: 350 45% 68%;
-        --glass: 0 0% 100% / 0.7;
-        --glass-border: 0 0% 100% / 0.2;
+        --glow: 347 61% 83%;
+        --glass: 0 0% 100% / 0.65;
+        --glass-border: 0 0% 100% / 0.25;
         --surface-elevated: 0 0% 100%;
     }
 
     .dark {
-        /* Noir Botanica 3.0 - Premium Dark Mode */
-        /* Deep obsidian with warm undertones */
-        --background: 20 15% 4%;
-        /* #090807 deep black */
-        --foreground: 40 25% 92%;
-        /* #F0EBE4 warm cream */
+        /* Obsidian Garden - Dark Theme */
+        /* Pure obsidian with coral red and deep moss botanical accents */
+        --background: 0 0% 4%;
+        /* #0A0A0A pure obsidian */
+        --foreground: 40 12% 86%;
+        /* #E0DCD5 parchment */
 
-        --card: 20 10% 8%;
-        /* #151312 elevated surface */
-        --card-foreground: 40 25% 92%;
+        --card: 0 0% 8%;
+        /* #141414 elevated surface */
+        --card-foreground: 40 12% 86%;
 
-        --popover: 20 10% 8%;
-        --popover-foreground: 40 25% 92%;
+        --popover: 0 0% 8%;
+        --popover-foreground: 40 12% 86%;
 
-        --primary: 350 35% 60%;
-        /* #C4909A muted rose */
-        --primary-foreground: 20 15% 4%;
+        --primary: 0 94% 69%;
+        /* #FA6868 coral red */
+        --primary-foreground: 0 0% 100%;
 
-        --secondary: 155 18% 32%;
-        /* #405A48 deep forest */
-        --secondary-foreground: 40 25% 92%;
+        --secondary: 124 14% 26%;
+        /* #3A4D39 deep moss */
+        --secondary-foreground: 40 12% 86%;
 
-        --muted: 20 8% 14%;
-        --muted-foreground: 40 15% 55%;
+        --muted: 0 0% 15%;
+        --muted-foreground: 40 12% 50%;
 
-        --accent: 155 18% 32%;
-        --accent-foreground: 40 25% 92%;
+        --accent: 0 94% 69%;
+        /* #FA6868 coral red */
+        --accent-foreground: 0 0% 100%;
 
-        --destructive: 0 55% 48%;
+        --destructive: 0 65% 52%;
         --destructive-foreground: 0 0% 100%;
 
-        --border: 20 8% 18%;
-        --input: 20 8% 18%;
-        --ring: 350 35% 60%;
+        --border: 0 0% 15%;
+        /* #262626 low-contrast borders */
+        --input: 0 0% 15%;
+        --ring: 0 94% 69%;
 
-        /* Extended palette - dark */
-        --sage: 155 18% 32%;
-        --blush: 350 35% 60%;
-        --cream: 40 25% 92%;
-        --ink: 20 15% 4%;
+        /* Extended palette - Obsidian Garden */
+        --coral-red: 0 94% 69%;
+        --deep-moss: 124 14% 26%;
+        --parchment: 40 12% 86%;
+        --obsidian: 0 0% 4%;
 
         /* Premium effect tokens - dark */
-        --glow: 350 35% 60%;
-        --glass: 0 0% 0% / 0.6;
-        --glass-border: 255 255 255 / 0.08;
-        --surface-elevated: 20 10% 10%;
+        --glow: 0 94% 69%;
+        /* Coral red glow */
+        --glass: 0 0% 8% / 0.8;
+        /* #141414 with opacity */
+        --glass-border: 0 94% 69% / 0.2;
+        /* Coral-tinted border */
+        --surface-elevated: 0 0% 10%;
     }
 
     * {
@@ -147,6 +154,42 @@
         -webkit-backdrop-filter: blur(20px) saturate(150%);
     }
 
+    /* === FLOATING NAVBAR GLASSMORPHIC EFFECTS === */
+    .navbar-glass-light {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+
+    .navbar-glass-dark {
+        background: rgba(20, 20, 20, 0.7);
+        border: 1px solid rgba(250, 104, 104, 0.2);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+
+    .navbar-floating {
+        position: fixed;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 50;
+        max-width: 1400px;
+        width: calc(100% - 2rem);
+        margin: 0 auto;
+    }
+
+    .navbar-link {
+        font-family: var(--font-sans);
+        font-size: 14px;
+        color: #2D2A26;
+    }
+
+    .dark .navbar-link {
+        color: hsl(var(--foreground));
+    }
+
     /* Grain overlay for texture */
     .grain-overlay {
         position: relative;
@@ -176,11 +219,7 @@
     }
 
     .dark .shadow-premium {
-        box-shadow:
-            0 1px 2px rgba(0, 0, 0, 0.15),
-            0 4px 8px rgba(0, 0, 0, 0.15),
-            0 12px 24px rgba(0, 0, 0, 0.2),
-            0 24px 48px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 10px 30px -10px rgba(250, 104, 104, 0.1);
     }
 
     .shadow-bloom {
@@ -189,8 +228,8 @@
     }
 
     .dark .shadow-bloom {
-        box-shadow: 0 8px 32px hsl(var(--primary) / 0.15),
-            0 4px 16px hsl(var(--primary) / 0.08);
+        box-shadow: 0 8px 32px rgba(250, 104, 104, 0.15),
+            0 4px 16px rgba(250, 104, 104, 0.08);
     }
 
     .shadow-glow {
@@ -211,8 +250,8 @@
     }
 
     .dark .card-premium:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3),
-            0 4px 16px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 12px 40px rgba(250, 104, 104, 0.2),
+            0 4px 16px rgba(250, 104, 104, 0.1);
     }
 
     /* Glow effect on hover */
@@ -473,6 +512,24 @@
     .backdrop-premium {
         backdrop-filter: blur(40px) saturate(180%);
         -webkit-backdrop-filter: blur(40px) saturate(180%);
+    }
+
+    /* 4K Image Transitions */
+    .theme-image-transition {
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Organic Container Shapes */
+    .container-organic {
+        @apply rounded-[2.5rem];
+    }
+
+    /* Dark Mode Accent Gradients */
+    .dark .text-accent-gradient {
+        background: linear-gradient(135deg, hsl(var(--coral-red)), hsl(var(--coral-red) / 0.7));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 }
 

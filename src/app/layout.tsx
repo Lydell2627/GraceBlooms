@@ -6,6 +6,7 @@ import { ConvexClientProvider } from "~/app/_components/ConvexClientProvider";
 import { AuthProvider } from "~/app/_components/AuthProvider";
 import { Toaster } from "~/components/ui/sonner";
 import { BotWidget } from "~/components/bot/BotWidget";
+import { LenisProvider } from "~/components/ui/LenisProvider";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -41,13 +42,15 @@ export default function RootLayout({
                     <AuthProvider>
                         <ThemeProvider
                             attribute="class"
-                            defaultTheme="system"
+                            defaultTheme="light"
                             enableSystem
                             disableTransitionOnChange={false}
                         >
-                            {children}
-                            <BotWidget />
-                            <Toaster position="bottom-right" richColors />
+                            <LenisProvider>
+                                {children}
+                                <BotWidget />
+                                <Toaster position="bottom-right" richColors />
+                            </LenisProvider>
                         </ThemeProvider>
                     </AuthProvider>
                 </ConvexClientProvider>

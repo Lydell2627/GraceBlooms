@@ -30,6 +30,7 @@ import {
     SheetTrigger,
 } from "~/components/ui/sheet";
 import { ScrollReveal } from "~/components/ui/scroll-reveal";
+import { BloomingGrid } from "~/components/ui/BloomingGrid";
 
 interface CatalogItem {
     _id: string;
@@ -320,16 +321,20 @@ export default function CatalogPage() {
                                     ))}
                                 </div>
                             ) : items && items.length > 0 ? (
-                                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                                    {items.map((item, i) => (
-                                        <ScrollReveal key={item._id} delay={i * 0.05}>
+                                <BloomingGrid
+                                    className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                                    staggerDelay={100}
+                                    triggerOffset={0.15}
+                                >
+                                    {items.map((item) => (
+                                        <div key={item._id} className="bloom-item">
                                             <ProductCard
                                                 product={toProductCardItem(item)}
                                                 onQuickView={(p) => setQuickViewProduct(p)}
                                             />
-                                        </ScrollReveal>
+                                        </div>
                                     ))}
-                                </div>
+                                </BloomingGrid>
                             ) : (
                                 <div className="text-center py-16">
                                     <div className="mb-4 text-6xl">🌸</div>

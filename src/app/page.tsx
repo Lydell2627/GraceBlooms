@@ -8,6 +8,9 @@ import { Navbar } from "~/components/layout/Navbar";
 import { Footer } from "~/components/layout/Footer";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
+import { MagneticButton } from "~/components/ui/MagneticButton";
+import { BloomingGrid } from "~/components/ui/BloomingGrid";
+import { ThemeImage } from "~/components/ui/ThemeImage";
 import * as React from "react";
 import { useQuery } from "convex/react";
 import { api } from "~/convex/_generated/api";
@@ -15,6 +18,9 @@ import { ProductCard } from "~/components/product/ProductCard";
 import { QuickViewDialog } from "~/components/product/QuickViewDialog";
 import { ScrollReveal } from "~/components/ui/scroll-reveal";
 import { FloatingShape } from "~/components/ui/floating-element";
+import { WavesBackground } from "~/components/ui/waves-background";
+import { ShinyText } from "~/components/ui/shiny-text";
+import { useParallax } from "~/hooks/useParallax";
 
 const occasions = [
     { name: "Wedding", category: "wedding" },
@@ -127,6 +133,9 @@ export default function Home() {
     const prefersReducedMotion = useReducedMotion();
     const [quickViewProduct, setQuickViewProduct] = React.useState<ReturnType<typeof toProductCardItem> | null>(null);
 
+    // Parallax refs for hero layers
+    const heroBackgroundRef = useParallax<HTMLDivElement>(0.5); // Slower parallax for background
+
     // Fetch dynamic data from Convex
     const featuredItems = useQuery(api.catalog.getFeatured, { limit: 4 });
     const settings = useQuery(api.settings.get, {});
@@ -161,19 +170,22 @@ export default function Home() {
 
             {/* Hero Section - Cinematic */}
             <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-16 sm:pb-0">
-                {/* Background Image with subtle zoom */}
+                {/* Background Image with parallax and theme-aware 4K sources */}
                 <motion.div
+                    ref={heroBackgroundRef}
                     initial={prefersReducedMotion ? {} : { scale: 1.1 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute inset-0 z-0"
+                    className="absolute inset-0 z-0 will-change-transform"
                 >
-                    <Image
-                        src="https://2lcifuj23a.ufs.sh/f/7mwewDydS8QM5cnd4yUj4at0SrcIVxTMmfYzNpQnWXGdAHsF"
+                    <ThemeImage
+                        lightSrc="https://2lcifuj23a.ufs.sh/f/7mwewDydS8QM5cnd4yUj4at0SrcIVxTMmfYzNpQnWXGdAHsF"
+                        darkSrc="https://2lcifuj23a.ufs.sh/f/7mwewDydS8QM5cnd4yUj4at0SrcIVxTMmfYzNpQnWXGdAHsF"
                         alt="Beautiful floral arrangement"
-                        fill
-                        className="object-cover"
                         priority
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
                 </motion.div>
@@ -181,8 +193,19 @@ export default function Home() {
                 {/* Grain Overlay */}
                 <div className="grain-overlay absolute inset-0 z-[1]" />
 
+                {/* Waves Animation Background */}
+                <WavesBackground
+                    className="z-[2]"
+                    colors={[
+                        "rgba(232, 213, 196, 0.08)",  // Terracotta
+                        "rgba(163, 177, 138, 0.08)",  // Sage
+                        "rgba(244, 172, 183, 0.08)",  // Petal Pink
+                    ]}
+                    speed={25}
+                />
+
                 {/* Floating Decorative Elements */}
-                <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+                <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
                     <FloatingShape
                         variant="blob"
                         size="xl"
@@ -233,9 +256,9 @@ export default function Home() {
                         >
                             {heroHeadline.split(" ").slice(0, -2).join(" ")}
                             <br />
-                            <span className="italic text-primary">
+                            <ShinyText className="italic text-primary text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
                                 {heroHeadline.split(" ").slice(-2).join(" ")}
-                            </span>
+                            </ShinyText>
                         </motion.h1>
 
                         {/* Subheadline */}
@@ -248,46 +271,38 @@ export default function Home() {
                             {heroSubheadline}
                         </motion.p>
 
-                        {/* Primary CTA Buttons */}
+                        {/* Primary CTA Buttons - Magnetic */}
                         <motion.div
                             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.8, duration: 0.6 }}
-                            className="mb-4 sm:mb-6 flex flex-col items-center justify-center gap-3 sm:gap-4 px-4 sm:px-0"
+                            className="mb-8 sm:mb-12 flex flex-col items-center justify-center gap-4 px-4 sm:px-0 sm:flex-row"
                         >
-                            <Button size="lg" className="w-full sm:w-auto sm:min-w-[200px] bg-green-600 hover:bg-green-500 text-base" asChild>
+                            <MagneticButton
+                                size="lg"
+                                magnetRadius={60}
+                                magnetStrength={0.4}
+                                className="w-full sm:w-auto sm:min-w-[220px] text-lg h-14 bg-green-600 hover:bg-green-500 shadow-lg hover:shadow-xl transition-all"
+                                asChild
+                            >
                                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                                     <MessageCircle className="mr-2 h-5 w-5" />
-                                    WhatsApp to Order
+                                    Order via WhatsApp
                                 </a>
-                            </Button>
-                            <Button size="lg" variant="premium" asChild className="w-full sm:w-auto sm:min-w-[200px] text-base">
-                                <Link href="/contact">
-                                    <Mail className="mr-2 h-4 w-4" />
-                                    Get a Quote
-                                </Link>
-                            </Button>
-                        </motion.div>
-
-                        {/* Secondary CTA Buttons */}
-                        <motion.div
-                            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.9, duration: 0.6 }}
-                            className="mb-8 sm:mb-12 flex flex-col items-center justify-center gap-3 px-4 sm:px-0 sm:flex-row"
-                        >
-                            <Button size="lg" variant="glass" className="w-full sm:w-auto text-white" asChild>
-                                <a href={`tel:${settings?.phoneNumber || "+919876543210"}`}>
-                                    <Phone className="mr-2 h-4 w-4" />
-                                    Call Now
-                                </a>
-                            </Button>
-                            <Button size="lg" variant="glass" className="w-full sm:w-auto text-white" asChild>
+                            </MagneticButton>
+                            <MagneticButton
+                                size="lg"
+                                variant="glass"
+                                magnetRadius={60}
+                                magnetStrength={0.4}
+                                className="w-full sm:w-auto sm:min-w-[220px] text-lg h-14 text-white border-white/20 hover:bg-white/10"
+                                asChild
+                            >
                                 <Link href="/catalog">
                                     Browse Catalog
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Link>
-                            </Button>
+                            </MagneticButton>
                         </motion.div>
 
                         {/* Occasion Chips */}
@@ -295,7 +310,7 @@ export default function Home() {
                             initial={prefersReducedMotion ? {} : { opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 1, duration: 0.6 }}
-                            className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 px-4 sm:px-0 mb-6 sm:mb-0"
+                            className="flex flex-wrap items-center justify-center gap-3 px-4 sm:px-0"
                         >
                             {occasions.map((occasion, index) => (
                                 <motion.div
@@ -307,7 +322,7 @@ export default function Home() {
                                     <Link href={`/catalog?category=${occasion.category}`}>
                                         <Badge
                                             variant="glass"
-                                            className="cursor-pointer px-4 py-1.5 text-white/90 transition-all hover:bg-white/20"
+                                            className="cursor-pointer px-5 py-2 text-sm font-medium text-white/90 transition-all hover:bg-white/20 hover:scale-105 backdrop-blur-md border-white/20"
                                         >
                                             {occasion.name}
                                         </Badge>
@@ -388,26 +403,30 @@ export default function Home() {
                         </div>
                     </ScrollReveal>
 
-                    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <BloomingGrid
+                        className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4"
+                        staggerDelay={120}
+                        triggerOffset={0.15}
+                    >
                         {isLoadingProducts ? (
                             Array.from({ length: 4 }).map((_, i) => (
-                                <div key={i} className="space-y-4">
+                                <div key={i} className="space-y-4 bloom-item">
                                     <div className="aspect-[4/5] rounded-3xl bg-muted animate-pulse" />
                                     <div className="h-4 w-2/3 rounded bg-muted animate-pulse" />
                                     <div className="h-4 w-1/3 rounded bg-muted animate-pulse" />
                                 </div>
                             ))
                         ) : (
-                            featuredItems?.map((item, i) => (
-                                <ScrollReveal key={item._id} delay={i * 0.1}>
+                            featuredItems?.map((item) => (
+                                <div key={item._id} className="bloom-item">
                                     <ProductCard
                                         product={toProductCardItem(item)}
                                         onQuickView={(p) => setQuickViewProduct(p)}
                                     />
-                                </ScrollReveal>
+                                </div>
                             ))
                         )}
-                    </div>
+                    </BloomingGrid>
 
                     <div className="mt-12 flex justify-center md:hidden">
                         <Button variant="outline" asChild className="w-full">
@@ -497,24 +516,24 @@ export default function Home() {
                                 We&apos;ll help you create the perfect arrangement.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button size="lg" className="bg-green-600 hover:bg-green-500" asChild>
+                                <MagneticButton size="lg" magnetRadius={70} magnetStrength={0.5} className="bg-green-600 hover:bg-green-500" asChild>
                                     <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                                         <MessageCircle className="mr-2 h-5 w-5" />
                                         WhatsApp Us
                                     </a>
-                                </Button>
-                                <Button size="lg" variant="outline" asChild>
+                                </MagneticButton>
+                                <MagneticButton size="lg" variant="outline" magnetRadius={70} magnetStrength={0.5} asChild>
                                     <a href={`tel:${settings?.phoneNumber || "+919876543210"}`}>
                                         <Phone className="mr-2 h-4 w-4" />
                                         Call Now
                                     </a>
-                                </Button>
-                                <Button size="lg" variant="outline" asChild>
+                                </MagneticButton>
+                                <MagneticButton size="lg" variant="outline" magnetRadius={70} magnetStrength={0.5} asChild>
                                     <Link href="/contact">
                                         <Mail className="mr-2 h-4 w-4" />
                                         Email Us
                                     </Link>
-                                </Button>
+                                </MagneticButton>
                             </div>
                         </div>
                     </ScrollReveal>
