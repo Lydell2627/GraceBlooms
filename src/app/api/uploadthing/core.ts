@@ -27,6 +27,16 @@ export const ourFileRouter = {
             console.log("Collection image uploaded:", file.url);
             return { url: file.url };
         }),
+
+    // Catalog images - for batch uploading product catalog images
+    catalogImage: f({ image: { maxFileSize: "8MB", maxFileCount: 10 } })
+        .middleware(async () => {
+            return { uploadedBy: "admin" };
+        })
+        .onUploadComplete(async ({ file }) => {
+            console.log("Catalog image uploaded:", file.url);
+            return { url: file.url };
+        }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
