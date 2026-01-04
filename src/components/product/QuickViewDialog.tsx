@@ -57,8 +57,8 @@ export function QuickViewDialog({ product, open, onOpenChange }: QuickViewDialog
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-3xl overflow-hidden p-0 rounded-3xl border-0 shadow-2xl">
-                <div className="grid md:grid-cols-2">
+            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0 rounded-3xl border-0 shadow-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-2">
                     {/* Image with subtle animation */}
                     <motion.div
                         initial={prefersReducedMotion ? {} : { opacity: 0, scale: 1.05 }}
@@ -112,7 +112,7 @@ export function QuickViewDialog({ product, open, onOpenChange }: QuickViewDialog
                     </motion.div>
 
                     {/* Info with staggered content */}
-                    <div className="flex flex-col p-8 bg-card">
+                    <div className="flex flex-col p-4 sm:p-6 md:p-8 bg-card">
                         <motion.div
                             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}

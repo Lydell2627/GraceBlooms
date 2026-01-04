@@ -21,12 +21,12 @@ export function LenisProvider({ children }: LenisProviderProps) {
                 const Lenis = (await import("@studio-freight/lenis")).default;
 
                 lenis = new Lenis({
-                    duration: 1.2,
+                    duration: 0.8,
                     easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                     orientation: "vertical",
                     gestureOrientation: "vertical",
                     smoothWheel: true,
-                    wheelMultiplier: 1,
+                    wheelMultiplier: 1.3,
                 });
 
                 function raf(time: number) {
