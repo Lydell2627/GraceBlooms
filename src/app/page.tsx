@@ -360,6 +360,8 @@ export default function Home() {
                                         src={item.img}
                                         alt={item.title}
                                         fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
+                                        loading="lazy"
                                         className="object-cover transition-transform duration-700 ease-premium group-hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />

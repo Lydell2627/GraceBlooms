@@ -28,6 +28,13 @@ export const metadata = {
         maximumScale: 1,
         viewportFit: "cover",
     },
+    other: {
+        'link': [
+            { rel: 'preconnect', href: 'https://2lcifuj23a.ufs.sh' },
+            { rel: 'preconnect', href: 'https://utfs.io' },
+            { rel: 'dns-prefetch', href: 'https://shocking-dogfish-638.convex.cloud' },
+        ]
+    }
 };
 
 export default function RootLayout({
