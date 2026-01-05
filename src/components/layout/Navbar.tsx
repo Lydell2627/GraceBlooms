@@ -5,6 +5,8 @@ import Link from "next/link";
 import NextImage from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { Flower2, Menu, User, LogOut, Sparkles, Phone, MessageCircle } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "~/convex/_generated/api";
 
 import { useAuth } from "~/app/_components/AuthProvider";
 import { signOut } from "~/lib/auth-client";
@@ -72,9 +74,14 @@ const collections: { title: string; href: string; description: string }[] = [
 export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
     const { user, isAuthenticated, isLoading } = useAuth();
+    const settings = useQuery(api.settings.get, {});
     const prefersReducedMotion = useReducedMotion();
     const scrollDirection = useScrollDirection();
     const navRef = React.useRef<HTMLElement>(null);
+
+    // Dynamic contact info from settings
+    const whatsappNumber = settings?.whatsappNumber || "919876543210";
+    const phoneNumber = settings?.phoneNumber || "+919876543210";
 
     // GSAP hide/show animation based on scroll direction
     React.useEffect(() => {
@@ -230,12 +237,12 @@ export function Navbar() {
                     {isAuthenticated && (
                         <div className="hidden lg:flex items-center gap-1">
                             <Button variant="ghost" size="icon" asChild className="text-primary hover:text-primary/80">
-                                <a href="tel:+919876543210" aria-label="Call us">
+                                <a href={`tel:${phoneNumber}`} aria-label="Call us">
                                     <Phone className="h-5 w-5" />
                                 </a>
                             </Button>
                             <Button variant="ghost" size="icon" asChild className="text-green-600 hover:text-green-500">
-                                <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                                <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
                                     <MessageCircle className="h-5 w-5" />
                                 </a>
                             </Button>
@@ -355,13 +362,13 @@ export function Navbar() {
                                 {isAuthenticated && (
                                     <div className="flex gap-2 px-4 mb-4">
                                         <Button variant="outline" className="flex-1 rounded-xl" asChild>
-                                            <a href="tel:+919876543210">
+                                            <a href={`tel:${phoneNumber}`}>
                                                 <Phone className="h-4 w-4 mr-2" />
                                                 Call
                                             </a>
                                         </Button>
                                         <Button className="flex-1 rounded-xl bg-green-600 hover:bg-green-500" asChild>
-                                            <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer">
+                                            <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer">
                                                 <MessageCircle className="h-4 w-4 mr-2" />
                                                 WhatsApp
                                             </a>

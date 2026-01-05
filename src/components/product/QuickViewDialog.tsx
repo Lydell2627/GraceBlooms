@@ -5,6 +5,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
 import { MessageCircle, Phone, Mail, Truck, Clock, Sparkles, Palette, Calendar } from "lucide-react"
+import { useQuery } from "convex/react"
+import { api } from "~/convex/_generated/api"
 import {
     Dialog,
     DialogContent,
@@ -37,8 +39,13 @@ interface QuickViewDialogProps {
 }
 
 export function QuickViewDialog({ product, open, onOpenChange }: QuickViewDialogProps) {
+    const settings = useQuery(api.settings.get, {})
     const prefersReducedMotion = useReducedMotion()
     const [currentImageIndex, setCurrentImageIndex] = React.useState(0)
+
+    // Dynamic contact info from settings
+    const whatsappNumber = settings?.whatsappNumber || "919876543210"
+    const phoneNumber = settings?.phoneNumber || "+919876543210"
 
     if (!product) return null
 
@@ -51,7 +58,7 @@ export function QuickViewDialog({ product, open, onOpenChange }: QuickViewDialog
     const whatsappMessage = encodeURIComponent(
         `Hi! I'm interested in "${product.title}" (${priceDisplay}). Can you help me with more details and order?`
     )
-    const whatsappLink = `https://wa.me/919876543210?text=${whatsappMessage}`
+    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
 
     const mainImage = product.images?.[currentImageIndex] || product.images?.[0] || "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn"
 
@@ -195,7 +202,7 @@ export function QuickViewDialog({ product, open, onOpenChange }: QuickViewDialog
                             {/* Secondary CTAs */}
                             <div className="flex gap-2">
                                 <Button variant="outline" size="lg" className="flex-1 rounded-xl" asChild>
-                                    <a href="tel:+919876543210">
+                                    <a href={`tel:${phoneNumber}`}>
                                         <Phone className="mr-2 h-4 w-4" />
                                         Call
                                     </a>

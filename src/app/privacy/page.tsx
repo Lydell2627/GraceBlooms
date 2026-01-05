@@ -1,6 +1,13 @@
+"use client";
+
+import { useQuery } from "convex/react";
+import { api } from "~/convex/_generated/api";
 import { Navbar } from "~/components/layout/Navbar";
 
 export default function PrivacyPage() {
+    const settings = useQuery(api.settings.get, {});
+    const contactEmail = settings?.email || "hello@graceblooms.com";
+
     return (
         <main className="min-h-screen bg-background text-foreground">
             <Navbar />
@@ -43,7 +50,7 @@ export default function PrivacyPage() {
 
                     <h2>5. Contact Us</h2>
                     <p>
-                        If you have any questions about this Privacy Policy, please contact us at [hello@noirbotanica.com](mailto:hello@noirbotanica.com).
+                        If you have any questions about this Privacy Policy, please contact us at <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
                     </p>
                 </div>
             </section>

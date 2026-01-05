@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { MessageCircle, Phone, Mail, Eye, Heart } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "~/convex/_generated/api";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { DeliveryBadge } from "./DeliveryBadge";
@@ -39,8 +41,13 @@ interface ProductCardProps {
 export function ProductCard({ product, onQuickView, className }: ProductCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [isWishlisted, setIsWishlisted] = useState(false);
+    const settings = useQuery(api.settings.get, {});
     const prefersReducedMotion = useReducedMotion();
     const cardRef = useRef<HTMLDivElement>(null);
+
+    // Dynamic contact info from settings
+    const whatsappNumber = settings?.whatsappNumber || "919876543210";
+    const phoneNumber = settings?.phoneNumber || "+919876543210";
 
     // Anime.js bloom effect on hover
     useEffect(() => {
@@ -69,7 +76,7 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
     const whatsappMessage = encodeURIComponent(
         `Hi! I'm interested in "${product.title}" (${priceDisplay}). Can you help me with more details?`
     );
-    const whatsappLink = `https://wa.me/919876543210?text=${whatsappMessage}`;
+    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
     const mainImage = product.images?.[0] || "https://2lcifuj23a.ufs.sh/f/7mwewDydS8QMjWc9ubBQFa39zYTI6ZLMgsqoDXWvHbV10xUn";
 
@@ -233,7 +240,7 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
                             </a>
                         </Button>
                         <Button variant="outline" size="sm" className="rounded-xl" asChild>
-                            <a href="tel:+919876543210">
+                            <a href={`tel:${phoneNumber}`}>
                                 <Phone className="h-4 w-4" />
                             </a>
                         </Button>

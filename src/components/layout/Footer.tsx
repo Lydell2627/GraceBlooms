@@ -4,6 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { Flower2, Mail, MapPin, Phone, Instagram, Twitter, Facebook } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useQuery } from "convex/react";
+import { api } from "~/convex/_generated/api";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
@@ -28,9 +30,15 @@ const footerLinks = {
 };
 
 export function Footer() {
+    const settings = useQuery(api.settings.get, {});
     const prefersReducedMotion = useReducedMotion();
     const [email, setEmail] = React.useState("");
     const [subscribed, setSubscribed] = React.useState(false);
+
+    // Dynamic contact info from settings
+    const contactEmail = settings?.email || "hello@graceblooms.com";
+    const contactPhone = settings?.phoneNumber || "+91 98765 43210";
+    const location = settings?.location || "123 Flower District, City - 400001";
 
     const handleSubscribe = (e: React.FormEvent) => {
         e.preventDefault();
@@ -66,15 +74,15 @@ export function Footer() {
                         <div className="mt-6 space-y-3">
                             <div className="flex items-center gap-3 text-sm text-muted-foreground">
                                 <MapPin className="h-4 w-4 text-primary" />
-                                <span>123 Flower District, New York, NY 10001</span>
+                                <span>{location}</span>
                             </div>
                             <div className="flex items-center gap-3 text-sm text-muted-foreground">
                                 <Phone className="h-4 w-4 text-primary" />
-                                <span>(555) 123-4567</span>
+                                <span>{contactPhone}</span>
                             </div>
                             <div className="flex items-center gap-3 text-sm text-muted-foreground">
                                 <Mail className="h-4 w-4 text-primary" />
-                                <span>hello@noirbotanica.com</span>
+                                <span>{contactEmail}</span>
                             </div>
                         </div>
 
