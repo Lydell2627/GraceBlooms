@@ -16,6 +16,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     return betterAuth({
         baseURL: siteUrl,
         trustedOrigins: [siteUrl],
+        secret: process.env.BETTER_AUTH_SECRET,
         database: authComponent.adapter(ctx),
         emailAndPassword: {
             enabled: true,
