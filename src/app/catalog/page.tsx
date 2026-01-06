@@ -30,6 +30,7 @@ import {
     SheetTrigger,
 } from "~/components/ui/sheet";
 import { BloomingGrid } from "~/components/ui/BloomingGrid";
+import { BotEngagementPopup } from "~/components/bot/BotEngagementPopup";
 
 interface CatalogItem {
     _id: string;
@@ -350,6 +351,11 @@ export default function CatalogPage() {
             </section>
 
             <Footer />
+
+            {/* AI Bot Engagement Popup */}
+            <BotEngagementPopup onOpenChat={() => {
+                console.log("Opening AI bot from catalog popup");
+            }} />
 
             <QuickViewDialog
                 product={quickViewProduct}

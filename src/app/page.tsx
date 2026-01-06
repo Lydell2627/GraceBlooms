@@ -21,6 +21,7 @@ import { FloatingShape } from "~/components/ui/floating-element";
 import { WavesBackground } from "~/components/ui/waves-background";
 import { ShinyText } from "~/components/ui/shiny-text";
 import { useParallax } from "~/hooks/useParallax";
+import { BotEngagementPopup } from "~/components/bot/BotEngagementPopup";
 
 const occasions = [
     { name: "Wedding", category: "wedding" },
@@ -544,6 +545,13 @@ export default function Home() {
 
             {/* Footer */}
             <Footer />
+
+            {/* AI Bot Engagement Popup */}
+            <BotEngagementPopup onOpenChat={() => {
+                // The BotWidget is always rendered, just need to trigger it to open
+                // This could be enhanced by passing a state setter from BotWidget
+                console.log("Opening AI bot from popup");
+            }} />
 
             <QuickViewDialog
                 product={quickViewProduct}

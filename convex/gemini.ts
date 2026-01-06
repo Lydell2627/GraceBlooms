@@ -73,6 +73,40 @@ const functions = [
             required: ["contactName", "contactPhone", "contactEmail"],
         },
     },
+    {
+        name: "sendSummary",
+        description: "Sends a professional conversation summary to the business via email or WhatsApp. Call this when user requests to send summary after collecting their details.",
+        parameters: {
+            type: SchemaType.OBJECT,
+            properties: {
+                method: {
+                    type: SchemaType.STRING,
+                    description: "Delivery method: 'email' or 'whatsapp'",
+                },
+                customerName: {
+                    type: SchemaType.STRING,
+                    description: "Customer's full name",
+                },
+                customerContact: {
+                    type: SchemaType.STRING,
+                    description: "Customer's phone or email",
+                },
+                occasion: {
+                    type: SchemaType.STRING,
+                    description: "The occasion/event",
+                },
+                preferences: {
+                    type: SchemaType.STRING,
+                    description: "Summary of customer's preferences (colors, style, budget, etc.)",
+                },
+                conversationHighlights: {
+                    type: SchemaType.STRING,
+                    description: "Key discussion points from the conversation",
+                },
+            },
+            required: ["method", "customerName", "customerContact", "occasion", "preferences"],
+        },
+    },
 ];
 // Response type for chat action
 interface ChatResponse {
@@ -128,32 +162,61 @@ export const chat = action({
                 ? `\n\n**Common Questions & Answers:**\n${args.faqContext.join('\n')}`
                 : "";
 
-            const systemPrompt = `${settings.systemPrompt || `You are Grace, the AI assistant for Grace Blooms, a luxury floral boutique in India. Your goal is to help customers create perfect floral arrangements for their special occasions.
+            const systemPrompt = `${settings.systemPrompt || `You are Grace, the luxury floral consultant for Grace Blooms, India's premier boutique for exquisite floral arrangements. You're not just an assistant—you're a passionate expert who helps customers create unforgettable moments through flowers.
 
-**Your Approach:**
-1. Be warm but CONCISE. Avoid long paragraphs.
-2. Ask ONE question at a time. Do not overwhelm the user.
-3. Recommend catalog items based on their needs
-4. Collect all required information step-by-step
-5. When ready, confirm details and create the inquiry
+**Your Consultant Personality:**
+- Warm, confident, and knowledgeable
+- Emotionally intelligent and empathetic
+- Subtly persuasive without being pushy
+- Paint vivid pictures of how arrangements will look and feel
+- Create anticipation and excitement about their special occasion
 
-**Inquiry Process:**
-- Occasion (wedding, birthday, anniversary, sympathy, etc.)
+**Persuasive Techniques to Use:**
+1. **Emotional Connection**: "Imagine their face lighting up when they see..."
+2. **Value Over Price**: "This isn't just flowers—it's creating a lasting memory"
+3. **Exclusivity**: "Our signature collection... hand-selected by our expert florists"
+4. **Social Proof**: "This is our most popular choice for [occasion]"
+5. **Gentle Urgency**: "For your [date], I'd recommend booking soon to ensure peak freshness"
+6. **Paint the Scene**: Describe colors, textures, fragrances in vivid detail
+
+**Conversation Flow:**
+1. Understand the occasion → Create emotional resonance
+2. Explore preferences → Highlight unique value propositions  
+3. Recommend options → Frame as exclusive, premium choices
+4. Discuss investment → Position budget as investing in memories
+5. Create gentle urgency → Event dates, seasonal availability
+6. Collect details → Seamlessly gather information
+7. Offer summary option → "Would you like me to send a summary via email or WhatsApp?"
+
+**Required Information (gather naturally):**
+- Occasion and its significance
 - Preferred colors/style
 - Budget range (in INR)
-- Delivery Location (Ask for a Google Maps link or full address)
+- Delivery location
 - Event date/time
-- Contact details (name, phone, email)
-- Any special requests
+- Contact: name, phone, email
+- Special requests or messages
 
-After collecting all details, ask for confirmation: "Should I submit this inquiry to our team?"
+**Response Style:**
+- Keep responses concise (2-3 sentences max)
+- ONE question at a time
+- Use emojis sparingly for warmth (🌸, 🌹, ✨)
+- Speak about flowers as if they're works of art
+- Example: "For anniversaries, our premium rose collection creates those unforgettable moments! 🌹 These hand-selected, peak-bloom beauties speak volumes about your journey together. Most couples invest ₹3,000-5,000 for arrangements that truly reflect their love. What range feels right for your milestone?"
+
+**After Collecting All Details:**
+1. Summarize what you've learned
+2. Ask: "Would you like me to prepare a summary of our conversation? I can send it to our team via email or WhatsApp for faster service!"
+3. If they choose email/WhatsApp, generate summary and send
+4. Then confirm and create inquiry
 
 When user confirms, call the createInquiryRecord function to submit.`}${memoryContext}${catalogContextStr}${servicesContextStr}${faqContextStr}
 
 **Important:**
 - Prices are in Indian Rupees (INR/₹)
 - Always ask for confirmation before submitting
-- Be helpful but don't make up information not in the context`;
+- Be helpful but don't make up information not in the context
+- Use consultative selling, not hard selling`;
 
             // Initialize model with function calling
             const model = genAI.getGenerativeModel({
@@ -176,6 +239,68 @@ When user confirms, call the createInquiryRecord function to submit.`}${memoryCo
 
             // Check for function calls
             const functionCall = response.functionCalls()?.[0];
+
+            // Handle sendSummary function
+            if (functionCall && functionCall.name === "sendSummary") {
+                const funcArgs = functionCall.args as {
+                    method: string;
+                    customerName: string;
+                    customerContact: string;
+                    occasion: string;
+                    preferences: string;
+                    conversationHighlights?: string;
+                };
+
+                // Get business settings
+                const businessEmail = process.env.BUSINESS_EMAIL || "inquiries@graceblooms.com";
+                const businessWhatsApp = process.env.BUSINESS_WHATSAPP_NUMBER || "919876543210";
+
+                // Generate professional summary
+                const summary = `📧 CUSTOMER INQUIRY SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Customer: ${funcArgs.customerName}
+Contact: ${funcArgs.customerContact}
+
+Occasion: ${funcArgs.occasion}
+
+Preferences & Requirements:
+${funcArgs.preferences}
+
+${funcArgs.conversationHighlights ? `\nConversation Highlights:\n${funcArgs.conversationHighlights}\n` : ""}
+Status: Awaiting team review
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Generated by Grace AI Consultant
+${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`;
+
+                // Log summary (actual email/WhatsApp sending can be implemented later)
+                console.log("📧 Summary to send (", funcArgs.method, "):", summary);
+
+                const summaryMessage = funcArgs.method === "email"
+                    ? `✅ Perfect! I've prepared a summary of our conversation for our team.\n\n📧 They'll receive it at ${businessEmail} and get back to you within 24 hours.\n\nReference: Grace AI Conversation - ${new Date().toLocaleDateString("en-IN")}\n\nIs there anything else you'd like to discuss?`
+                    : `✅ Perfect! I've prepared a summary of our conversation for our team.\n\n📱 They'll receive it on WhatsApp and get back to you soon.\n\nReference: Grace AI Conversation - ${new Date().toLocaleDateString("en-IN")}\n\nIs there anything else you'd like to discuss?`;
+
+                // Store messages
+                await ctx.runMutation(api.ai.storeMessage, {
+                    userId: args.userId,
+                    role: "user",
+                    content: args.userMessage,
+                });
+
+                await ctx.runMutation(api.ai.storeMessage, {
+                    userId: args.userId,
+                    role: "assistant",
+                    content: summaryMessage,
+                });
+
+                return {
+                    message: summaryMessage,
+                    inquiryCreated: false,
+                    whatsappSent: funcArgs.method === "whatsapp",
+                    emailSent: funcArgs.method === "email",
+                };
+            }
 
             if (functionCall && functionCall.name === "createInquiryRecord") {
                 // Extract function arguments

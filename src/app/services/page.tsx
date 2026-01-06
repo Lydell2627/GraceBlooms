@@ -10,6 +10,7 @@ import { Navbar } from "~/components/layout/Navbar";
 import { Footer } from "~/components/layout/Footer";
 import { Button } from "~/components/ui/button";
 import { ScrollReveal } from "~/components/ui/scroll-reveal";
+import { BotEngagementPopup } from "~/components/bot/BotEngagementPopup";
 
 const iconMap: Record<string, React.ElementType> = {
     Heart,
@@ -173,6 +174,11 @@ export default function ServicesPage() {
             </section>
 
             <Footer />
+
+            {/* AI Bot Engagement Popup */}
+            <BotEngagementPopup onOpenChat={() => {
+                console.log("Opening AI bot from services popup");
+            }} />
         </main>
     );
 }
