@@ -32,6 +32,8 @@ interface Message {
     timestamp: number;
     inquiryCreated?: boolean;
     referenceId?: string;
+    whatsappUrl?: string; // URL to open WhatsApp
+    emailUrl?: string; // URL to open Email
 }
 
 export function BotWidget() {
@@ -115,6 +117,8 @@ export function BotWidget() {
                 timestamp: Date.now(),
                 inquiryCreated: response.inquiryCreated,
                 referenceId: response.referenceId,
+                whatsappUrl: response.whatsappUrl,
+                emailUrl: response.emailUrl,
             };
 
             setLocalMessages((prev) => [...prev, assistantMessage]);
@@ -294,6 +298,27 @@ export function BotWidget() {
                                                     )}
                                                 >
                                                     <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+
+                                                    {/* WhatsApp/Email buttons */}
+                                                    {msg.whatsappUrl && (
+                                                        <Button
+                                                            onClick={() => window.open(msg.whatsappUrl, "_blank")}
+                                                            className="mt-3 w-full bg-green-600 hover:bg-green-700"
+                                                            size="sm"
+                                                        >
+                                                            <MessageCircle className="h-4 w-4 mr-2" />
+                                                            Open WhatsApp
+                                                        </Button>
+                                                    )}
+                                                    {msg.emailUrl && (
+                                                        <Button
+                                                            onClick={() => window.location.href = msg.emailUrl!}
+                                                            className="mt-3 w-full"
+                                                            size="sm"
+                                                        >
+                                                            📧 Open Email Client
+                                                        </Button>
+                                                    )}
 
                                                     {/* Success indicator for inquiry */}
                                                     {msg.inquiryCreated && msg.referenceId && (
