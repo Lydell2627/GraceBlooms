@@ -37,7 +37,7 @@ import {
 import { ThemeToggle } from "~/app/_components/ThemeToggle";
 import { cn } from "~/lib/utils";
 import { useScrollDirection } from "~/hooks/useScrollDirection";
-import { useCurrency } from "~/hooks/useCurrency";
+import { useCurrency } from "~/app/_components/CurrencyProvider";
 import { SUPPORTED_CURRENCIES, type CurrencyCode } from "~/lib/currency";
 import {
     Select,

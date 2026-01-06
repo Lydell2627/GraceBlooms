@@ -220,7 +220,10 @@ export const sendEmailInquiry = action({
     },
     handler: async (ctx, args) => {
         const resendApiKey = process.env.RESEND_API_KEY;
-        const businessEmail = process.env.BUSINESS_EMAIL || "inquiries@graceblooms.com";
+
+        // Get email from settings
+        const siteSettings = await ctx.runQuery(api.settings.get, {});
+        const businessEmail = siteSettings?.email || process.env.BUSINESS_EMAIL || "inquiries@graceblooms.com";
 
         if (!resendApiKey) {
             console.error("Resend API key not configured");
