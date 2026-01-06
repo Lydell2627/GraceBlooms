@@ -18,9 +18,12 @@ const footerLinks = {
     ],
     company: [
         { label: "About Us", href: "/about" },
+        { label: "Services", href: "/services" },
         { label: "Contact", href: "/contact" },
-        { label: "Flower Care", href: "/chat" },
         { label: "Privacy Policy", href: "/privacy" },
+        { label: "Terms of Service", href: "/terms" },
+        { label: "Shipping Policy", href: "/shipping" },
+        { label: "Refund Policy", href: "/refund" },
     ],
     social: [
         { label: "Instagram", href: "#", icon: Instagram },
@@ -50,9 +53,6 @@ export function Footer() {
 
     return (
         <footer className="relative border-t bg-card">
-            {/* Decorative gradient */}
-            <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-
             <div className="container mx-auto px-6 py-16 lg:py-20">
                 <div className="grid gap-12 lg:grid-cols-12">
                     {/* Brand Section */}
