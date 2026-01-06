@@ -21,8 +21,6 @@ import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { cn } from "~/lib/utils";
-import { useCurrency } from "~/hooks/useCurrency";
-import { SUPPORTED_CURRENCIES } from "~/lib/currency";
 
 // Pages where bot should NOT appear
 const excludedPaths = ["/sign-in", "/sign-up", "/admin"];
@@ -46,9 +44,6 @@ export function BotWidget() {
     const [isTyping, setIsTyping] = React.useState(false);
     const [localMessages, setLocalMessages] = React.useState<Message[]>([]);
     const scrollRef = React.useRef<HTMLDivElement>(null);
-
-    // Currency support
-    const { currency, setCurrency } = useCurrency();
 
     // Check if bot is enabled
     const aiSettings = useQuery(api.ai.getSettings, {});
@@ -212,19 +207,6 @@ export function BotWidget() {
                                     <p className="text-xs opacity-90">Floral Assistant</p>
                                 </div>
                             </div>
-                            {/* Currency Selector */}
-                            <select
-                                value={currency}
-                                onChange={(e) => setCurrency(e.target.value as any)}
-                                className="text-xs bg-white/20 text-white rounded px-2 py-1 border-0 focus:outline-none focus:ring-2 focus:ring-white/30"
-                                title="Select currency"
-                            >
-                                {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
-                                    <option key={code} value={code} className="text-gray-900">
-                                        {info.symbol} {code}
-                                    </option>
-                                ))}
-                            </select>
                             <div className="flex items-center gap-1">
                                 {isAuthenticated && (
                                     <Button

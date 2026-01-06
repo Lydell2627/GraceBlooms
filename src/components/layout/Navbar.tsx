@@ -37,6 +37,15 @@ import {
 import { ThemeToggle } from "~/app/_components/ThemeToggle";
 import { cn } from "~/lib/utils";
 import { useScrollDirection } from "~/hooks/useScrollDirection";
+import { useCurrency } from "~/hooks/useCurrency";
+import { SUPPORTED_CURRENCIES, type CurrencyCode } from "~/lib/currency";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "~/components/ui/select";
 
 const collections: { title: string; href: string; description: string }[] = [
     {
@@ -78,6 +87,7 @@ export function Navbar() {
     const prefersReducedMotion = useReducedMotion();
     const scrollDirection = useScrollDirection();
     const navRef = React.useRef<HTMLElement>(null);
+    const { currency, setCurrency } = useCurrency();
 
     // Dynamic contact info from settings
     const whatsappNumber = settings?.whatsappNumber || "919876543210";
@@ -230,6 +240,29 @@ export function Navbar() {
 
                 {/* Right Actions - positioned absolutely on right */}
                 <div className="flex items-center gap-1 lg:gap-2 absolute right-6 lg:right-8">
+                    {/* Currency Selector */}
+                    <Select value={currency} onValueChange={(value) => setCurrency(value as CurrencyCode)}>
+                        <SelectTrigger className="w-[90px] h-9 border-0 bg-transparent hover:bg-accent/50 focus:ring-0 focus:ring-offset-0 text-sm">
+                            <SelectValue>
+                                <span className="flex items-center gap-1.5">
+                                    <span className="text-base">{SUPPORTED_CURRENCIES[currency].symbol}</span>
+                                    <span className="font-medium">{currency}</span>
+                                </span>
+                            </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent className="min-w-[200px]">
+                            {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
+                                <SelectItem key={code} value={code} className="cursor-pointer">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-lg w-6">{info.symbol}</span>
+                                        <span className="font-medium">{code}</span>
+                                        <span className="text-muted-foreground text-xs">{info.name}</span>
+                                    </div>
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+
                     {/* Theme Toggle */}
                     <ThemeToggle />
 
