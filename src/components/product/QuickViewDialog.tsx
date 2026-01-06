@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion"
 import { MessageCircle, Phone, Mail, Truck, Clock, Sparkles, Palette, Calendar } from "lucide-react"
 import { useQuery } from "convex/react"
 import { api } from "~/convex/_generated/api"
+import { useCurrency } from "~/app/_components/CurrencyProvider"
 import {
     Dialog,
     DialogContent,
@@ -42,6 +43,7 @@ export function QuickViewDialog({ product, open, onOpenChange }: QuickViewDialog
     const settings = useQuery(api.settings.get, {})
     const prefersReducedMotion = useReducedMotion()
     const [currentImageIndex, setCurrentImageIndex] = React.useState(0)
+    const { formatRange } = useCurrency()
 
     // Dynamic contact info from settings
     const whatsappNumber = settings?.whatsappNumber || "919876543210"
@@ -49,10 +51,10 @@ export function QuickViewDialog({ product, open, onOpenChange }: QuickViewDialog
 
     if (!product) return null
 
-    // Format price range
+    // Format price range with currency conversion
     const priceDisplay = product.priceMin === product.priceMax
-        ? `₹${product.priceMin.toLocaleString("en-IN")}`
-        : `₹${product.priceMin.toLocaleString("en-IN")}–₹${product.priceMax.toLocaleString("en-IN")}`
+        ? formatRange(product.priceMin, product.priceMin).split(" - ")[0]
+        : formatRange(product.priceMin, product.priceMax)
 
     // Generate WhatsApp message
     const whatsappMessage = encodeURIComponent(

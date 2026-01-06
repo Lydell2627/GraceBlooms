@@ -28,6 +28,7 @@
     "@studio-freight/lenis": "^1.0.42",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@uploadthing/react": "^7.3.3",
+    "@vercel/analytics": "^1.6.1",
     "animejs": "^3.2.2",
     "better-auth": "^1.4.9",
     "better-call": "^1.1.7",

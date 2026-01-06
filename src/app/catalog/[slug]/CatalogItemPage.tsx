@@ -15,6 +15,7 @@ import { Badge } from "~/components/ui/badge";
 import { Separator } from "~/components/ui/separator";
 import { ScrollReveal } from "~/components/ui/scroll-reveal";
 import { toast } from "sonner";
+import { useCurrency } from "~/app/_components/CurrencyProvider";
 
 interface CatalogItemPageProps {
     slug: string;
@@ -24,6 +25,7 @@ export function CatalogItemPage({ slug }: CatalogItemPageProps) {
     const prefersReducedMotion = useReducedMotion();
     const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
     const [isWishlisted, setIsWishlisted] = React.useState(false);
+    const { formatRange } = useCurrency();
 
     const item = useQuery(api.catalog.getBySlug, { slug });
     const settings = useQuery(api.settings.get, {});
@@ -72,8 +74,8 @@ export function CatalogItemPage({ slug }: CatalogItemPageProps) {
     }
 
     const priceDisplay = item.priceMin === item.priceMax
-        ? `₹${item.priceMin.toLocaleString("en-IN")}`
-        : `₹${item.priceMin.toLocaleString("en-IN")}–₹${item.priceMax.toLocaleString("en-IN")}`;
+        ? formatRange(item.priceMin, item.priceMin).split(" - ")[0]
+        : formatRange(item.priceMin, item.priceMax);
 
     const whatsappMessage = encodeURIComponent(
         `Hi! I'd like to order "${item.title}" (${priceDisplay}). Can you help me with the process?`

@@ -7,6 +7,8 @@ import { AuthProvider } from "~/app/_components/AuthProvider";
 import { Toaster } from "~/components/ui/sonner";
 import { BotWidget } from "~/components/bot/BotWidget";
 import { LenisProvider } from "~/components/ui/LenisProvider";
+import { Analytics } from "@vercel/analytics/react";
+import { CurrencyProvider } from "~/app/_components/CurrencyProvider";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -47,20 +49,23 @@ export default function RootLayout({
             <body className={`font-sans ${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
                 <ConvexClientProvider>
                     <AuthProvider>
-                        <ThemeProvider
-                            attribute="class"
-                            defaultTheme="light"
-                            enableSystem
-                            disableTransitionOnChange={false}
-                        >
-                            <LenisProvider>
-                                {children}
-                                <BotWidget />
-                                <Toaster position="bottom-right" richColors />
-                            </LenisProvider>
-                        </ThemeProvider>
+                        <CurrencyProvider>
+                            <ThemeProvider
+                                attribute="class"
+                                defaultTheme="light"
+                                enableSystem
+                                disableTransitionOnChange={false}
+                            >
+                                <LenisProvider>
+                                    {children}
+                                    <BotWidget />
+                                    <Toaster position="bottom-right" richColors />
+                                </LenisProvider>
+                            </ThemeProvider>
+                        </CurrencyProvider>
                     </AuthProvider>
                 </ConvexClientProvider>
+                <Analytics />
             </body>
         </html>
     );

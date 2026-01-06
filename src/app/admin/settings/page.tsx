@@ -5,19 +5,21 @@ import Link from "next/link";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "~/convex/_generated/api";
-
+import { SUPPORTED_CURRENCIES, type CurrencyCode } from "~/lib/currency";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { toast } from "sonner";
 
 interface SettingsFormData {
     whatsappNumber: string;
     phoneNumber: string;
     email: string;
+    baseCurrency: string;
     heroHeadline: string;
     heroSubheadline: string;
     trustBadge1Title: string;
@@ -42,6 +44,7 @@ export default function AdminSettingsPage() {
         whatsappNumber: "",
         phoneNumber: "",
         email: "",
+        baseCurrency: "INR",
         heroHeadline: "",
         heroSubheadline: "",
         trustBadge1Title: "",
@@ -78,6 +81,7 @@ export default function AdminSettingsPage() {
                 whatsappNumber: settings.whatsappNumber || "",
                 phoneNumber: settings.phoneNumber || "",
                 email: settings.email || "",
+                baseCurrency: settings.baseCurrency || "INR",
                 heroHeadline: settings.heroHeadline || "",
                 heroSubheadline: settings.heroSubheadline || "",
                 trustBadge1Title: trustBadges[0]?.title || "",
@@ -104,6 +108,7 @@ export default function AdminSettingsPage() {
                 whatsappNumber: formData.whatsappNumber || undefined,
                 phoneNumber: formData.phoneNumber || undefined,
                 email: formData.email || undefined,
+                baseCurrency: formData.baseCurrency || undefined,
                 heroHeadline: formData.heroHeadline || undefined,
                 heroSubheadline: formData.heroSubheadline || undefined,
                 trustBadges: [
@@ -239,6 +244,42 @@ export default function AdminSettingsPage() {
                                         placeholder="Hand-crafted arrangements that speak the language of the heart..."
                                         rows={3}
                                     />
+                                </div>
+                            </div>
+                        </div>
+
+                        <Separator />
+
+                        {/* Currency Settings */}
+                        <div className="rounded-2xl border bg-card p-6">
+                            <h2 className="font-serif text-xl font-bold mb-4">Currency Settings</h2>
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="baseCurrency">Base Currency</Label>
+                                    <Select
+                                        value={formData.baseCurrency}
+                                        onValueChange={(value) =>
+                                            setFormData((prev) => ({ ...prev, baseCurrency: value }))
+                                        }
+                                    >
+                                        <SelectTrigger id="baseCurrency">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
+                                                <SelectItem key={code} value={code}>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-lg">{info.symbol}</span>
+                                                        <span className="font-medium">{code}</span>
+                                                        <span className="text-muted-foreground">- {info.name}</span>
+                                                    </div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-xs text-muted-foreground">
+                                        All catalog prices should be entered in this currency. Users can view prices in their preferred currency.
+                                    </p>
                                 </div>
                             </div>
                         </div>

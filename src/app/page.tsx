@@ -231,7 +231,7 @@ export default function Home() {
                 </div>
 
                 {/* Content */}
-                <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center pt-16 sm:pt-0">
+                <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center pt-32 sm:pt-24">
                     <motion.div
                         initial={prefersReducedMotion ? {} : { opacity: 0 }}
                         animate={{ opacity: 1 }}

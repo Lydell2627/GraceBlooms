@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -14,6 +12,7 @@ import { cn } from "~/lib/utils";
 import { toast } from "sonner";
 import { bloomAnimation, bloomReverseAnimation } from "~/lib/anime-utils";
 import { SpotlightCard } from "~/components/ui/spotlight-card";
+import { useCurrency } from "~/app/_components/CurrencyProvider";
 
 interface CatalogItem {
     id: string;
@@ -44,6 +43,7 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
     const settings = useQuery(api.settings.get, {});
     const prefersReducedMotion = useReducedMotion();
     const cardRef = useRef<HTMLDivElement>(null);
+    const { formatRange } = useCurrency();
 
     // Dynamic contact info from settings
     const whatsappNumber = settings?.whatsappNumber || "919876543210";
@@ -67,10 +67,10 @@ export function ProductCard({ product, onQuickView, className }: ProductCardProp
         });
     };
 
-    // Format price range
+    // Format price range with currency conversion
     const priceDisplay = product.priceMin === product.priceMax
-        ? `₹${product.priceMin.toLocaleString("en-IN")}`
-        : `₹${product.priceMin.toLocaleString("en-IN")}–₹${product.priceMax.toLocaleString("en-IN")}`;
+        ? formatRange(product.priceMin, product.priceMin).split(" - ")[0] // Get just the first part if same
+        : formatRange(product.priceMin, product.priceMax);
 
     // Generate WhatsApp message
     const whatsappMessage = encodeURIComponent(

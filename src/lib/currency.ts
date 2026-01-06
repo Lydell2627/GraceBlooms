@@ -105,17 +105,36 @@ function getFallbackRates(): ExchangeRates {
 }
 
 /**
- * Converts INR amount to target currency
+ * Converts amount from base currency to target currency
+ * @param amount - Amount in the base currency
+ * @param baseCurrency - The base currency the amount is in
+ * @param targetCurrency - Currency to convert to
+ * @param rates - Current exchange rates
  */
 export function convertCurrency(
-    amountInINR: number,
+    amount: number,
+    baseCurrency: CurrencyCode,
     targetCurrency: CurrencyCode,
     rates: ExchangeRates
 ): number {
-    if (targetCurrency === "INR") return amountInINR;
+    if (baseCurrency === targetCurrency) return amount;
 
-    const rate = rates.rates[targetCurrency];
-    return parseFloat((amountInINR * rate).toFixed(2));
+    // If rates are in the base currency we're converting from, use directly
+    if (rates.base === baseCurrency) {
+        const rate = rates.rates[targetCurrency];
+        return parseFloat((amount * rate).toFixed(2));
+    }
+
+    // Otherwise, convert via the rates' base currency
+    // Step 1: Convert from baseCurrency to rates.base
+    const baseRate = rates.rates[baseCurrency as CurrencyCode];
+    if (!baseRate) return amount; // Fallback if rate not found
+
+    const amountInRatesBase = amount / baseRate;
+
+    // Step 2: Convert from rates.base to targetCurrency
+    const targetRate = rates.rates[targetCurrency];
+    return parseFloat((amountInRatesBase * targetRate).toFixed(2));
 }
 
 /**
@@ -142,18 +161,19 @@ export function formatCurrency(
 }
 
 /**
- * Format price range with currency
+ * Format price range with currency conversion from base currency
  */
 export function formatPriceRange(
-    minINR: number,
-    maxINR: number,
-    currency: CurrencyCode,
+    minAmount: number,
+    maxAmount: number,
+    baseCurrency: CurrencyCode,
+    targetCurrency: CurrencyCode,
     rates: ExchangeRates
 ): string {
-    const min = convertCurrency(minINR, currency, rates);
-    const max = convertCurrency(maxINR, currency, rates);
+    const min = convertCurrency(minAmount, baseCurrency, targetCurrency, rates);
+    const max = convertCurrency(maxAmount, baseCurrency, targetCurrency, rates);
 
-    return `${formatCurrency(min, currency)} - ${formatCurrency(max, currency)}`;
+    return `${formatCurrency(min, targetCurrency)} - ${formatCurrency(max, targetCurrency)}`;
 }
 
 /**

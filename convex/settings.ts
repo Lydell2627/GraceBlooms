@@ -22,6 +22,7 @@ export const update = mutation({
         email: v.optional(v.string()),
         heroHeadline: v.optional(v.string()),
         heroSubheadline: v.optional(v.string()),
+        baseCurrency: v.optional(v.string()),
         trustBadges: v.optional(v.array(v.object({
             icon: v.string(),
             title: v.string(),
@@ -72,6 +73,7 @@ export const initialize = mutation({
                 key: "site",
                 heroHeadline: "Emotions in Full Bloom",
                 heroSubheadline: "Hand-crafted arrangements that speak the language of the heart. Contact us to order.",
+                baseCurrency: "INR",
                 trustBadges: [
                     { icon: "Sparkles", title: "Freshness Guaranteed", description: "Sourced directly from local growers" },
                     { icon: "Truck", title: "Same Day Delivery", description: "Order by 2PM for immediate delivery" },

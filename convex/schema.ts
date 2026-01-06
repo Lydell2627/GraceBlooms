@@ -49,6 +49,7 @@ export default defineSchema({
         email: v.optional(v.string()),
         heroHeadline: v.optional(v.string()),
         heroSubheadline: v.optional(v.string()),
+        baseCurrency: v.optional(v.string()), // INR, USD, EUR, GBP, AED - currency for all stored prices
         trustBadges: v.optional(v.array(v.object({
             icon: v.string(),
             title: v.string(),
