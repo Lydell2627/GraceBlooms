@@ -372,11 +372,7 @@ export function Navbar() {
                                     <Select value={currency} onValueChange={(value) => setCurrency(value as CurrencyCode)}>
                                         <SelectTrigger className="w-full h-10 bg-accent/30 hover:bg-accent/50">
                                             <SelectValue>
-                                                <span className="flex items-center gap-2">
-                                                    <span className="text-lg shrink-0">{SUPPORTED_CURRENCIES[currency].symbol}</span>
-                                                    <span className="font-medium">{currency}</span>
-                                                    <span className="text-xs text-muted-foreground">- {SUPPORTED_CURRENCIES[currency].name}</span>
-                                                </span>
+                                                {SUPPORTED_CURRENCIES[currency].symbol} {currency} - {SUPPORTED_CURRENCIES[currency].name}
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent className="w-full">
