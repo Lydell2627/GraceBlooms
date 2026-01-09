@@ -88,12 +88,24 @@ export function Navbar() {
     const scrollDirection = useScrollDirection();
     const navRef = React.useRef<HTMLElement>(null);
     const { currency, setCurrency } = useCurrency();
+    const [mouseNearTop, setMouseNearTop] = React.useState(false);
 
     // Dynamic contact info from settings
     const whatsappNumber = settings?.whatsappNumber || "919876543210";
     const phoneNumber = settings?.phoneNumber || "+919876543210";
 
-    // GSAP hide/show animation based on scroll direction
+    // Track mouse position to show navbar when mouse is near top
+    React.useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            // Show navbar if mouse is within 100px of top
+            setMouseNearTop(e.clientY < 100);
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
+    }, []);
+
+    // GSAP hide/show animation based on scroll direction and mouse position
     React.useEffect(() => {
         if (!navRef.current || prefersReducedMotion) return;
 
@@ -101,19 +113,20 @@ export function Navbar() {
             try {
                 const gsap = (await import("gsap")).default;
 
-                if (scrollDirection === "down") {
-                    gsap.to(navRef.current, {
-                        y: -100,
-                        opacity: 0,
-                        duration: 0.4,
-                        ease: "power2.out",
-                    });
-                } else if (scrollDirection === "up") {
+                // Show navbar if mouse is near top, regardless of scroll direction
+                if (mouseNearTop || scrollDirection === "up") {
                     gsap.to(navRef.current, {
                         y: 0,
                         opacity: 1,
                         duration: 0.3,
                         ease: "power2.inOut",
+                    });
+                } else if (scrollDirection === "down") {
+                    gsap.to(navRef.current, {
+                        y: -100,
+                        opacity: 0,
+                        duration: 0.4,
+                        ease: "power2.out",
                     });
                 }
             } catch (error) {
@@ -122,7 +135,7 @@ export function Navbar() {
         };
 
         animateNavbar();
-    }, [scrollDirection, prefersReducedMotion]);
+    }, [scrollDirection, mouseNearTop, prefersReducedMotion]);
 
     const handleSignOut = async () => {
         try {
