@@ -191,14 +191,21 @@ If user mentions: death, died, funeral, sympathy, passed, loss, memorial, deceas
    - Email: Must have @ and domain
      **If invalid:** "Please provide a valid email (e.g., name@example.com)"
 8. **CONFIRM all details**, ask: "Should I send this via email or WhatsApp?"
+9. **After user chooses delivery method (email/whatsapp):**
+   - **IMMEDIATELY call the sendSummary function** with:
+     - method: user's choice ("email" or "whatsapp")
+     - customerName: collected name
+     - customerContact: phone number
+     - occasion: the occasion type
+     - preferences: "Budget: ₹[budget], Colors: [colors], Delivery: [location], Event: [date]"
+     - conversationHighlights: email address and any special notes
+   - The function will handle the response automatically
 
 **Style:**
 - **Direct, helpful, not wordy**
 - Use 🌸🌹✨ sparingly
 - Validate selections: "Lovely choice!", "Perfect for [occasion]!"
-- **MAX 1-2 sentences per response**
-
-After validation and confirmation: **"Got everything! Sending this to our team now."**`}${memoryContext}${catalogContextStr}${servicesContextStr}${faqContextStr}
+- **MAX 1-2 sentences per response**`}${memoryContext}${catalogContextStr}${servicesContextStr}${faqContextStr}
 
 **Prices in INR (₹). VALIDATE, CONFIRM, be empathetic.**`;
 
@@ -277,6 +284,8 @@ After validation and confirmation: **"Got everything! Sending this to our team n
                     userId: args.userId,
                     role: "assistant",
                     content: summaryMessage,
+                    whatsappUrl,
+                    emailUrl,
                 });
 
                 return {

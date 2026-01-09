@@ -130,12 +130,16 @@ export const storeMessage = mutation({
         userId: v.string(),
         role: v.string(),
         content: v.string(),
+        whatsappUrl: v.optional(v.string()),
+        emailUrl: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const id = await ctx.db.insert("messages", {
             userId: args.userId,
             role: args.role,
             content: args.content,
+            whatsappUrl: args.whatsappUrl,
+            emailUrl: args.emailUrl,
             createdAt: Date.now(),
         });
         return id;

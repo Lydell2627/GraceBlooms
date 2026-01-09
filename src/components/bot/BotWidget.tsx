@@ -71,6 +71,8 @@ export function BotWidget() {
                 role: msg.role as "user" | "assistant",
                 content: msg.content,
                 timestamp: msg.createdAt,
+                whatsappUrl: msg.whatsappUrl,
+                emailUrl: msg.emailUrl,
             }));
             setLocalMessages(messages);
         }

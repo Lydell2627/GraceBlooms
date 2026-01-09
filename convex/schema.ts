@@ -204,6 +204,8 @@ export default defineSchema({
         userId: v.string(),
         role: v.string(), // user, assistant
         content: v.string(),
+        whatsappUrl: v.optional(v.string()), // WhatsApp deep link
+        emailUrl: v.optional(v.string()), // mailto: URL
         createdAt: v.number(),
     })
         .index("by_userId", ["userId"])
