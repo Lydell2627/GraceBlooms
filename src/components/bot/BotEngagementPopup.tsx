@@ -4,7 +4,6 @@ import * as React from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { MessageCircle, X, Sparkles } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
 
 const POPUP_SESSION_KEY = "grace_bot_popup_shown";
 const POPUP_DELAY = 5000; // 5 seconds
