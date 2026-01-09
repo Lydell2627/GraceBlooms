@@ -41,7 +41,7 @@ export function usePerformance(): PerformanceSettings {
         const detectPerformance = () => {
             let quality: "high" | "medium" | "low" = "high";
             let enableParallax = true;
-            let enableComplexAnimations = true;
+            const enableComplexAnimations = true;
 
             // Check for mobile devices - they handle differently
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
