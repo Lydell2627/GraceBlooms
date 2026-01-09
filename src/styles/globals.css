@@ -124,6 +124,10 @@
         font-feature-settings: "rlig" 1, "calt" 1;
         overflow-x: hidden;
         width: 100%;
+        /* Scroll performance optimizations */
+        transform: translateZ(0);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     /* Smooth theme transitions */
@@ -181,6 +185,10 @@
         max-width: 1400px;
         width: calc(100% - 2rem);
         margin: 0 auto;
+        /* Performance optimizations */
+        will-change: transform, opacity;
+        transform: translateX(-50%) translateZ(0);
+        backface-visibility: hidden;
     }
 
     .navbar-link {
@@ -533,6 +541,29 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+    }
+
+    /* Scroll Performance Optimizations */
+    @media (prefers-reduced-motion: no-preference) {
+
+        /* Layout containment for better scroll performance */
+        section {
+            contain: layout style;
+        }
+
+        /* Optimize parallax containers */
+        .parallax-container {
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        /* GPU-accelerated elements */
+        .gpu-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
     }
 }
 

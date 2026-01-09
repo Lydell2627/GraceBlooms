@@ -21,6 +21,7 @@ import { FloatingShape } from "~/components/ui/floating-element";
 import { WavesBackground } from "~/components/ui/waves-background";
 import { ShinyText } from "~/components/ui/shiny-text";
 import { useParallax } from "~/hooks/useParallax";
+import { usePerformance, getParallaxIntensity } from "~/hooks/usePerformance";
 import { BotEngagementPopup } from "~/components/bot/BotEngagementPopup";
 
 const occasions = [
@@ -134,8 +135,15 @@ export default function Home() {
     const prefersReducedMotion = useReducedMotion();
     const [quickViewProduct, setQuickViewProduct] = React.useState<ReturnType<typeof toProductCardItem> | null>(null);
 
-    // Parallax refs for hero layers
-    const heroBackgroundRef = useParallax<HTMLDivElement>(0.5); // Slower parallax for background
+    // Performance detection - adapts to device capabilities
+    const performance = usePerformance();
+    const parallaxIntensity = getParallaxIntensity(performance.animationQuality);
+
+    // Parallax refs for hero layers - only enabled if device supports it
+    const heroBackgroundRef = useParallax<HTMLDivElement>(
+        parallaxIntensity,
+        performance.enableParallax && !prefersReducedMotion
+    );
 
     // Fetch dynamic data from Convex
     const featuredItems = useQuery(api.catalog.getFeatured, { limit: 4 });
@@ -170,14 +178,14 @@ export default function Home() {
             <Navbar />
 
             {/* Hero Section - Cinematic */}
-            <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-16 sm:pb-0">
+            <section className="relative flex min-h-screen items-center justify-center overflow-hidden pb-16 sm:pb-0 gpu-accelerated">
                 {/* Background Image with parallax and theme-aware 4K sources */}
                 <motion.div
                     ref={heroBackgroundRef}
                     initial={prefersReducedMotion ? {} : { scale: 1.1 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute inset-0 z-0 will-change-transform"
+                    className="absolute inset-0 z-0 parallax-container"
                 >
                     <ThemeImage
                         lightSrc="https://2lcifuj23a.ufs.sh/f/7mwewDydS8QM5cnd4yUj4at0SrcIVxTMmfYzNpQnWXGdAHsF"

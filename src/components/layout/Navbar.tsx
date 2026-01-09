@@ -93,35 +93,45 @@ export function Navbar() {
     const whatsappNumber = settings?.whatsappNumber || "919876543210";
     const phoneNumber = settings?.phoneNumber || "+919876543210";
 
-    // GSAP hide/show animation based on scroll direction
+    // GSAP hide/show animation based on scroll direction (optimized)
     React.useEffect(() => {
         if (!navRef.current || prefersReducedMotion) return;
 
-        const animateNavbar = async () => {
-            try {
-                const gsap = (await import("gsap")).default;
+        let timeoutId: NodeJS.Timeout;
 
-                if (scrollDirection === "down") {
-                    gsap.to(navRef.current, {
-                        y: -100,
-                        opacity: 0,
-                        duration: 0.4,
-                        ease: "power2.out",
-                    });
-                } else if (scrollDirection === "up") {
-                    gsap.to(navRef.current, {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.3,
-                        ease: "power2.inOut",
-                    });
+        const animateNavbar = async () => {
+            // Debounce rapid scroll changes
+            clearTimeout(timeoutId);
+
+            timeoutId = setTimeout(async () => {
+                try {
+                    const gsap = (await import("gsap")).default;
+
+                    if (scrollDirection === "down") {
+                        // Only transform, no opacity for better performance
+                        gsap.to(navRef.current, {
+                            y: -100,
+                            duration: 0.3,
+                            ease: "power2.out",
+                        });
+                    } else if (scrollDirection === "up") {
+                        gsap.to(navRef.current, {
+                            y: 0,
+                            duration: 0.25,
+                            ease: "power2.out",
+                        });
+                    }
+                } catch (error) {
+                    console.warn("GSAP animation failed:", error);
                 }
-            } catch (error) {
-                console.warn("GSAP animation failed:", error);
-            }
+            }, 50); // 50ms debounce
         };
 
         animateNavbar();
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
     }, [scrollDirection, prefersReducedMotion]);
 
     const handleSignOut = async () => {
