@@ -242,11 +242,11 @@ export function Navbar() {
                 <div className="flex items-center gap-1 lg:gap-2 absolute right-6 lg:right-8">
                     {/* Currency Selector */}
                     <Select value={currency} onValueChange={(value) => setCurrency(value as CurrencyCode)}>
-                        <SelectTrigger className="w-[90px] h-9 border-0 bg-transparent hover:bg-accent/50 focus:ring-0 focus:ring-offset-0 text-sm">
+                        <SelectTrigger className="w-[100px] sm:w-[95px] h-9 border-0 bg-transparent hover:bg-accent/50 focus:ring-0 focus:ring-offset-0 text-xs sm:text-sm">
                             <SelectValue>
-                                <span className="flex items-center gap-1.5">
-                                    <span className="text-base">{SUPPORTED_CURRENCIES[currency].symbol}</span>
-                                    <span className="font-medium">{currency}</span>
+                                <span className="flex items-center gap-1 sm:gap-1.5">
+                                    <span className="text-base sm:text-base shrink-0">{SUPPORTED_CURRENCIES[currency].symbol}</span>
+                                    <span className="font-medium text-xs sm:text-sm">{currency}</span>
                                 </span>
                             </SelectValue>
                         </SelectTrigger>
