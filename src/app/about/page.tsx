@@ -195,7 +195,7 @@ export default function AboutPage() {
                             <ScrollReveal key={i} delay={i * 0.1}>
                                 <div className="flex gap-6 mb-8 last:mb-0">
                                     <div className="flex flex-col items-center">
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#A3B18A] text-white font-bold text-sm shrink-0">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold text-sm">
                                             {milestone.year}
                                         </div>
                                         {i < milestones.length - 1 && (
