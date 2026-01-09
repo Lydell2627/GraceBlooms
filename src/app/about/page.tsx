@@ -230,13 +230,13 @@ export default function AboutPage() {
                                         WhatsApp Us
                                     </a>
                                 </Button>
-                                <Button size="lg" variant="outline" className="text-background border-background/30 hover:bg-background/10" asChild>
+                                <Button size="lg" variant="outline" className="bg-white text-foreground border-white hover:bg-white/90" asChild>
                                     <a href={`tel:${settings?.phoneNumber || "+919876543210"}`}>
                                         <Phone className="mr-2 h-4 w-4" />
                                         Call Now
                                     </a>
                                 </Button>
-                                <Button size="lg" variant="outline" className="text-background border-background/30 hover:bg-background/10" asChild>
+                                <Button size="lg" variant="outline" className="bg-white text-foreground border-white hover:bg-white/90" asChild>
                                     <Link href="/contact">
                                         <Mail className="mr-2 h-4 w-4" />
                                         Email Us
