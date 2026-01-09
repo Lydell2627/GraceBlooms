@@ -139,6 +139,20 @@
     :focus-visible {
         @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
     }
+
+    /* Performance optimizations */
+    section {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 500px;
+    }
+
+    .will-change-transform {
+        will-change: transform;
+    }
+
+    .will-change-auto {
+        will-change: auto;
+    }
 }
 
 @layer components {

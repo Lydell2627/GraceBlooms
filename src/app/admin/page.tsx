@@ -11,9 +11,6 @@ import {
     HelpCircle,
     Bot,
     MessageSquare,
-    TrendingUp,
-    Users,
-    Calendar
 } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "~/convex/_generated/api";

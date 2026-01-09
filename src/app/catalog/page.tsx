@@ -117,7 +117,6 @@ export default function CatalogPage() {
         maxPrice: priceRange[1] < 25000 ? priceRange[1] : undefined,
         sort,
     });
-    const settings = useQuery(api.settings.get, {});
 
     // Use search results if searching, otherwise use catalog list
     const items = search.trim() ? searchResults : catalogItems;

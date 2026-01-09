@@ -141,6 +141,7 @@ export default function UploadCatalogImagesPage() {
                                         key={idx}
                                         className="flex items-start gap-3 p-3 bg-muted rounded-lg"
                                     >
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img
                                             src={img.url}
                                             alt={img.fileName}

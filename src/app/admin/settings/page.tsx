@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "~/convex/_generated/api";
-import { SUPPORTED_CURRENCIES, type CurrencyCode } from "~/lib/currency";
+import { SUPPORTED_CURRENCIES } from "~/lib/currency";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";

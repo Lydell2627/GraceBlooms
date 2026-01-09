@@ -5,8 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
     MessageSquare,
-    Phone,
-    Mail,
     Calendar,
     MapPin,
     Palette,
@@ -24,7 +22,7 @@ import { useAuth } from "~/app/_components/AuthProvider";
 import { Navbar } from "~/components/layout/Navbar";
 import { Footer } from "~/components/layout/Footer";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { ScrollReveal } from "~/components/ui/scroll-reveal";
 import {
@@ -86,7 +84,7 @@ export default function MyInquiriesPage() {
         api.inquiries.getUserInquiries,
         user?.id ? { userId: user.id } : "skip"
     );
-    const [selectedInquiry, setSelectedInquiry] = React.useState<any>(null);
+    const [selectedInquiry, setSelectedInquiry] = React.useState<NonNullable<typeof inquiries>[number] | null>(null);
     const [detailsOpen, setDetailsOpen] = React.useState(false);
 
     // Loading state

@@ -15,14 +15,19 @@ import * as React from "react";
 import { useQuery } from "convex/react";
 import { api } from "~/convex/_generated/api";
 import { ProductCard } from "~/components/product/ProductCard";
-import { QuickViewDialog } from "~/components/product/QuickViewDialog";
 import { ScrollReveal } from "~/components/ui/scroll-reveal";
-import { FloatingShape } from "~/components/ui/floating-element";
-import { WavesBackground } from "~/components/ui/waves-background";
-import { ShinyText } from "~/components/ui/shiny-text";
 import { useParallax } from "~/hooks/useParallax";
-import { BotEngagementPopup } from "~/components/bot/BotEngagementPopup";
 
+// Dynamic imports for components that don't need to be in initial bundle
+const QuickViewDialog = React.lazy(() => import("~/components/product/QuickViewDialog").then(m => ({ default: m.QuickViewDialog })));
+const BotEngagementPopup = React.lazy(() => import("~/components/bot/BotEngagementPopup").then(m => ({ default: m.BotEngagementPopup })));
+const FloatingShape = React.lazy(() => import("~/components/ui/floating-element").then(m => ({ default: m.FloatingShape })));
+const WavesBackground = React.lazy(() => import("~/components/ui/waves-background").then(m => ({ default: m.WavesBackground })));
+const ShinyText = React.lazy(() => import("~/components/ui/shiny-text").then(m => ({ default: m.ShinyText })));
+
+
+
+// Static data - no need for memoization at module level
 const occasions = [
     { name: "Wedding", category: "wedding" },
     { name: "Birthday", category: "birthday" },
@@ -72,6 +77,7 @@ const testimonials = [
         rating: 5,
     },
 ];
+
 
 // Type for catalog items from Convex
 interface CatalogItem {
@@ -195,40 +201,44 @@ export default function Home() {
                 <div className="grain-overlay absolute inset-0 z-[1]" />
 
                 {/* Waves Animation Background */}
-                <WavesBackground
-                    className="z-[2]"
-                    colors={[
-                        "rgba(232, 213, 196, 0.08)",  // Terracotta
-                        "rgba(163, 177, 138, 0.08)",  // Sage
-                        "rgba(244, 172, 183, 0.08)",  // Petal Pink
-                    ]}
-                    speed={25}
-                />
+                <React.Suspense fallback={null}>
+                    <WavesBackground
+                        className="z-[2]"
+                        colors={[
+                            "rgba(232, 213, 196, 0.08)",  // Terracotta
+                            "rgba(163, 177, 138, 0.08)",  // Sage
+                            "rgba(244, 172, 183, 0.08)",  // Petal Pink
+                        ]}
+                        speed={25}
+                    />
+                </React.Suspense>
 
                 {/* Floating Decorative Elements */}
-                <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
-                    <FloatingShape
-                        variant="blob"
-                        size="xl"
-                        color="primary"
-                        className="absolute top-20 left-10 opacity-20"
-                        delay={0}
-                    />
-                    <FloatingShape
-                        variant="circle"
-                        size="lg"
-                        color="secondary"
-                        className="absolute bottom-40 right-20 opacity-15"
-                        delay={2}
-                    />
-                    <FloatingShape
-                        variant="petal"
-                        size="md"
-                        color="primary"
-                        className="absolute top-1/3 right-1/4 opacity-10"
-                        delay={4}
-                    />
-                </div>
+                <React.Suspense fallback={null}>
+                    <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
+                        <FloatingShape
+                            variant="blob"
+                            size="xl"
+                            color="primary"
+                            className="absolute top-20 left-10 opacity-20"
+                            delay={0}
+                        />
+                        <FloatingShape
+                            variant="circle"
+                            size="lg"
+                            color="secondary"
+                            className="absolute bottom-40 right-20 opacity-15"
+                            delay={2}
+                        />
+                        <FloatingShape
+                            variant="petal"
+                            size="md"
+                            color="primary"
+                            className="absolute top-1/3 right-1/4 opacity-10"
+                            delay={4}
+                        />
+                    </div>
+                </React.Suspense>
 
                 {/* Content */}
                 <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center pt-32 sm:pt-24">
@@ -257,9 +267,11 @@ export default function Home() {
                         >
                             {heroHeadline.split(" ").slice(0, -2).join(" ")}
                             <br />
-                            <ShinyText className="italic text-primary text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-                                {heroHeadline.split(" ").slice(-2).join(" ")}
-                            </ShinyText>
+                            <React.Suspense fallback={<span className="italic text-primary text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">{heroHeadline.split(" ").slice(-2).join(" ")}</span>}>
+                                <ShinyText className="italic text-primary text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+                                    {heroHeadline.split(" ").slice(-2).join(" ")}
+                                </ShinyText>
+                            </React.Suspense>
                         </motion.h1>
 
                         {/* Subheadline */}
@@ -547,17 +559,21 @@ export default function Home() {
             <Footer />
 
             {/* AI Bot Engagement Popup */}
-            <BotEngagementPopup onOpenChat={() => {
-                // The BotWidget is always rendered, just need to trigger it to open
-                // This could be enhanced by passing a state setter from BotWidget
-                console.log("Opening AI bot from popup");
-            }} />
+            <React.Suspense fallback={null}>
+                <BotEngagementPopup onOpenChat={() => {
+                    // The BotWidget is always rendered, just need to trigger it to open
+                    // This could be enhanced by passing a state setter from BotWidget
+                    console.log("Opening AI bot from popup");
+                }} />
+            </React.Suspense>
 
-            <QuickViewDialog
-                product={quickViewProduct}
-                open={!!quickViewProduct}
-                onOpenChange={(open) => !open && setQuickViewProduct(null)}
-            />
+            <React.Suspense fallback={null}>
+                <QuickViewDialog
+                    product={quickViewProduct}
+                    open={!!quickViewProduct}
+                    onOpenChange={(open) => !open && setQuickViewProduct(null)}
+                />
+            </React.Suspense>
         </main>
     );
 }

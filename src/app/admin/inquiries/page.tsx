@@ -7,9 +7,6 @@ import {
     Phone,
     Mail,
     Calendar,
-    MapPin,
-    Palette,
-    DollarSign,
     CheckCircle2,
     Clock,
     XCircle,
@@ -70,7 +67,7 @@ function getStatusIcon(status: string) {
 export default function AdminInquiriesPage() {
     const inquiries = useQuery(api.inquiries.listAll, {});
     const updateStatus = useMutation(api.inquiries.updateInquiryStatus);
-    const [selectedInquiry, setSelectedInquiry] = React.useState<any>(null);
+    const [selectedInquiry, setSelectedInquiry] = React.useState<NonNullable<typeof inquiries>[number] | null>(null);
     const [detailsOpen, setDetailsOpen] = React.useState(false);
 
     const handleStatusChange = async (inquiryId: Id<"inquiries">, newStatus: string) => {

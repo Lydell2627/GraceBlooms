@@ -5,19 +5,26 @@ import { ThemeProvider } from "~/app/_components/ThemeProvider";
 import { ConvexClientProvider } from "~/app/_components/ConvexClientProvider";
 import { AuthProvider } from "~/app/_components/AuthProvider";
 import { Toaster } from "~/components/ui/sonner";
-import { BotWidget } from "~/components/bot/BotWidget";
 import { LenisProvider } from "~/components/ui/LenisProvider";
-import { Analytics } from "@vercel/analytics/react";
 import { CurrencyProvider } from "~/app/_components/CurrencyProvider";
+import * as React from "react";
+
+// Lazy load non-critical components
+const BotWidget = React.lazy(() => import("~/components/bot/BotWidget").then(m => ({ default: m.BotWidget })));
+const Analytics = React.lazy(() => import("@vercel/analytics/react").then(m => ({ default: m.Analytics })));
 
 const inter = Inter({
     subsets: ["latin"],
     variable: "--font-sans",
+    display: "swap",  // Faster text rendering
+    adjustFontFallback: true,  // Reduce layout shift
 });
 
 const playfair = Playfair_Display({
     subsets: ["latin"],
     variable: "--font-serif",
+    display: "swap",  // Faster text rendering
+    adjustFontFallback: true,  // Reduce layout shift
 });
 
 export const metadata = {
@@ -58,14 +65,18 @@ export default function RootLayout({
                             >
                                 <LenisProvider>
                                     {children}
-                                    <BotWidget />
+                                    <React.Suspense fallback={null}>
+                                        <BotWidget />
+                                    </React.Suspense>
                                     <Toaster position="bottom-right" richColors />
                                 </LenisProvider>
                             </ThemeProvider>
                         </CurrencyProvider>
                     </AuthProvider>
                 </ConvexClientProvider>
-                <Analytics />
+                <React.Suspense fallback={null}>
+                    <Analytics />
+                </React.Suspense>
             </body>
         </html>
     );

@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { Plus, Pencil, Trash2, ArrowLeft, Eye, EyeOff, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, ArrowLeft, Search } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "~/convex/_generated/api";
 import type { Id } from "~/convex/_generated/dataModel";
