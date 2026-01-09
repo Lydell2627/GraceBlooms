@@ -93,45 +93,35 @@ export function Navbar() {
     const whatsappNumber = settings?.whatsappNumber || "919876543210";
     const phoneNumber = settings?.phoneNumber || "+919876543210";
 
-    // GSAP hide/show animation based on scroll direction (optimized)
+    // GSAP hide/show animation based on scroll direction
     React.useEffect(() => {
         if (!navRef.current || prefersReducedMotion) return;
 
-        let timeoutId: NodeJS.Timeout;
-
         const animateNavbar = async () => {
-            // Debounce rapid scroll changes
-            clearTimeout(timeoutId);
+            try {
+                const gsap = (await import("gsap")).default;
 
-            timeoutId = setTimeout(async () => {
-                try {
-                    const gsap = (await import("gsap")).default;
-
-                    if (scrollDirection === "down") {
-                        // Only transform, no opacity for better performance
-                        gsap.to(navRef.current, {
-                            y: -100,
-                            duration: 0.3,
-                            ease: "power2.out",
-                        });
-                    } else if (scrollDirection === "up") {
-                        gsap.to(navRef.current, {
-                            y: 0,
-                            duration: 0.25,
-                            ease: "power2.out",
-                        });
-                    }
-                } catch (error) {
-                    console.warn("GSAP animation failed:", error);
+                if (scrollDirection === "down") {
+                    gsap.to(navRef.current, {
+                        y: -100,
+                        opacity: 0,
+                        duration: 0.4,
+                        ease: "power2.out",
+                    });
+                } else if (scrollDirection === "up") {
+                    gsap.to(navRef.current, {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.3,
+                        ease: "power2.inOut",
+                    });
                 }
-            }, 50); // 50ms debounce
+            } catch (error) {
+                console.warn("GSAP animation failed:", error);
+            }
         };
 
         animateNavbar();
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
     }, [scrollDirection, prefersReducedMotion]);
 
     const handleSignOut = async () => {
