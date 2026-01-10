@@ -64,12 +64,20 @@ export const updateInquiryStatus = mutation({
         emailSent: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
-        await ctx.db.patch(args.inquiryId, {
+        // Build patch object, only including defined values
+        const patch: { status: string; updatedAt: number; whatsappSent?: boolean; emailSent?: boolean } = {
             status: args.status,
-            whatsappSent: args.whatsappSent ?? undefined,
-            emailSent: args.emailSent ?? undefined,
             updatedAt: Date.now(),
-        });
+        };
+
+        if (args.whatsappSent !== undefined) {
+            patch.whatsappSent = args.whatsappSent;
+        }
+        if (args.emailSent !== undefined) {
+            patch.emailSent = args.emailSent;
+        }
+
+        await ctx.db.patch(args.inquiryId, patch);
     },
 });
 
