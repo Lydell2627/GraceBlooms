@@ -95,11 +95,23 @@ export default function AdminInquiriesPage() {
     const [contactDetailsOpen, setContactDetailsOpen] = React.useState(false);
 
     const handleStatusChange = async (inquiryId: Id<"inquiries">, newStatus: string) => {
-        await updateStatus({ inquiryId, status: newStatus });
+        try {
+            console.log("Updating AI Bot inquiry status:", { inquiryId, newStatus });
+            await updateStatus({ inquiryId, status: newStatus });
+            console.log("Status updated successfully");
+        } catch (error) {
+            console.error("Failed to update AI Bot inquiry status:", error);
+        }
     };
 
     const handleContactStatusChange = async (id: Id<"contactInquiries">, newStatus: string) => {
-        await updateContactStatus({ id, status: newStatus });
+        try {
+            console.log("Updating Contact inquiry status:", { id, newStatus });
+            await updateContactStatus({ id, status: newStatus });
+            console.log("Contact status updated successfully");
+        } catch (error) {
+            console.error("Failed to update Contact inquiry status:", error);
+        }
     };
 
     const isLoading = inquiries === undefined || contactInquiries === undefined;
